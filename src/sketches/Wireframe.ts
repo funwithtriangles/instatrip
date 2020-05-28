@@ -15,7 +15,7 @@ import {
 } from 'three';
 import { webcamEffect, renderPass } from '../setup';
 
-import { faceGeometry } from '../faceMesh';
+import { faceGeometry, metrics } from '../faceMesh';
 
 interface SketchConstructor {
   composer: EffectComposer;
@@ -25,11 +25,15 @@ interface SketchConstructor {
 }
 
 export class Wireframe {
-  constructor({ composer, scene }: SketchConstructor) {
-    const mat = new MeshBasicMaterial({ wireframe: true });
-    const mesh = new Mesh(faceGeometry, mat);
+  material: MeshBasicMaterial;
 
-    scene.add(mesh);
+  mesh: Mesh;
+
+  constructor({ composer, scene }: SketchConstructor) {
+    this.material = new MeshBasicMaterial({ wireframe: true });
+    this.mesh = new Mesh(faceGeometry, this.material);
+
+    scene.add(this.mesh);
 
     const renderSavePass = new SavePass();
 
@@ -47,5 +51,10 @@ export class Wireframe {
     composer.addPass(renderPass);
     composer.addPass(renderSavePass);
     composer.addPass(combineTexturesPass);
+  }
+
+  update() {
+    const s = 1 + metrics.mouthOpenness;
+    this.mesh.scale.set(s, s, s);
   }
 }

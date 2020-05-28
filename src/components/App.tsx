@@ -32,7 +32,7 @@ export default function App() {
     const sketch = new Wireframe({ composer, scene, persCam, orthCam });
 
     startAnimation(() => {
-      // sketch.update();
+      sketch.update();
     });
   }, []);
 

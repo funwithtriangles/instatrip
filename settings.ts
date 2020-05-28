@@ -1,4 +1,4 @@
 export const devMode = {
-  fakeCam: true,
+  fakeCam: false,
   fps: true,
 };
