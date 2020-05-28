@@ -7,8 +7,9 @@ export const camTexture = new THREE.VideoTexture(video);
 
 if (devMode.fakeCam) {
   video.src = 'testface.mp4';
-  video.play();
   video.loop = true;
+  video.muted = true;
+  video.play();
 } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   const constraints = {
     video: { width: 1280, height: 720, facingMode: 'user' },
