@@ -1,30 +1,15 @@
 import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three';
 import styled from 'styled-components';
+import {
+  orthCam,
+  persCam,
+  renderer,
+  composer,
+  scene,
+  startAnimation,
+} from '../setup';
 import { useWinSize } from '../hooks/useWinSize';
-
-const renderer = new THREE.WebGLRenderer();
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshNormalMaterial();
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-camera.position.z = 5;
-const animate = function() {
-  requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-  renderer.render(scene, camera);
-};
-animate();
+import { Wireframe } from '../sketches/Wireframe';
 
 const CanvasContainer = styled.div`
   canvas {
@@ -43,15 +28,27 @@ export default function App() {
   const winSize = useWinSize();
 
   useEffect(() => {
-    const { width, height } = winSize;
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
+    // const { width, height } = winSize;
+    // persCam.aspect = window.innerWidth / window.innerHeight;
+    // persCam.updateProjectionMatrix();
+    // renderer.setSize(width, height);
+    // orthCam.left = -0.5 * width;
+    // orthCam.right = 0.5 * width;
+    // orthCam.top = 0.5 * height;
+    // orthCam.bottom = -0.5 * height;
+    // orthCam.updateProjectionMatrix();
+    // console.log(orthCam);
   }, [winSize]);
 
   // Will only fire once
   useEffect(() => {
     containerRef.current.appendChild(renderer.domElement);
+
+    const sketch = new Wireframe({ composer, scene, persCam, orthCam });
+
+    startAnimation(() => {
+      // sketch.update();
+    });
   }, []);
 
   return <CanvasContainer ref={containerRef} />;

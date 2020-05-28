@@ -11,7 +11,7 @@
     "checkJs": false,
     "jsx": "react",
     "pretty": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -21,6 +21,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["src"],
+  "include": ["src", "postprocessing.d.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

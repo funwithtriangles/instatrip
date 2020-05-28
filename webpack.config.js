@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -31,12 +32,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: 'test-video' }],
+    }),
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
-    liveReload: true,
-    port: 9000,
-    historyApiFallback: true,
-    writeToDisk: true,
+    port: 8080,
+    https: true,
+    host: '0.0.0.0',
   },
 };
