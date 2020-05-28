@@ -7,11 +7,11 @@ import {
   PerspectiveCamera,
   Scene,
 } from 'three';
-import * as facemesh from '@tensorflow-models/facemesh';
+
 import { devMode } from '../settings';
 import { camTexture, video } from './webcam';
-import { FaceMeshFaceGeometry } from './FaceMeshFaceGeometry/face';
 import { getResizeFactors } from './utils/getResizeFactors';
+import { faceGeometry, updateFaceMesh, initFaceMesh } from './faceMesh';
 
 export const renderer = new WebGLRenderer({ antialias: true, alpha: true });
 export const composer = new EffectComposer(renderer);
@@ -33,15 +33,6 @@ export const webcamEffect = new TextureEffect({
 webcamEffect.uvTransform = true;
 
 export const renderPass = new RenderPass(scene, orthCam);
-
-let faceMeshModel: facemesh.FaceMesh;
-export const faceGeometry = new FaceMeshFaceGeometry();
-
-const initFaceMesh = async () => {
-  faceMeshModel = await facemesh.load({
-    maxFaces: 1,
-  });
-};
 
 const resize = () => {
   composer.setSize(window.innerWidth, window.innerHeight, false);
@@ -83,12 +74,7 @@ export const startAnimation = (cb?: (deltaFPS: number) => void) => {
       cb(deltaFPS);
     }
 
-    if (faceMeshModel) {
-      const faces = await faceMeshModel.estimateFaces(video, false, true);
-      if (faces.length) {
-        faceGeometry.update(faces[0], true);
-      }
-    }
+    updateFaceMesh();
 
     composer.render(delta);
 

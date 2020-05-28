@@ -8,19 +8,14 @@ import {
 
 import {
   Mesh,
-  MeshNormalMaterial,
   Scene,
   PerspectiveCamera,
   OrthographicCamera,
-  BoxBufferGeometry,
-  DoubleSide,
   MeshBasicMaterial,
 } from 'three';
-import { Sketch } from './Sketch';
+import { webcamEffect, renderPass } from '../setup';
 
-import { webcamEffect, renderPass, faceGeometry } from '../setup';
-
-import { video } from '../webcam';
+import { faceGeometry } from '../faceMesh';
 
 interface SketchConstructor {
   composer: EffectComposer;
@@ -30,13 +25,11 @@ interface SketchConstructor {
 }
 
 export class Wireframe {
-  constructor({ composer, scene, orthCam }: SketchConstructor) {
+  constructor({ composer, scene }: SketchConstructor) {
     const mat = new MeshBasicMaterial({ wireframe: true });
     const mesh = new Mesh(faceGeometry, mat);
 
-    const cube = new Mesh(new BoxBufferGeometry(), mat);
     scene.add(mesh);
-    // scene.add(cube);
 
     const renderSavePass = new SavePass();
 
