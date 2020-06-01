@@ -1,14 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import {
-  orthCam,
-  persCam,
-  renderer,
-  composer,
-  scene,
-  startAnimation,
-} from '../setup';
-import { Wireframe } from '../sketches/Wireframe';
+import { renderer, composer, scene, startAnimation } from '../setup';
+import { Cyborg } from '../sketches/Cyborg.js';
 
 const CanvasContainer = styled.div`
   canvas {
@@ -29,10 +22,10 @@ export default function App() {
   useEffect(() => {
     containerRef.current.appendChild(renderer.domElement);
 
-    const sketch = new Wireframe({ composer, scene, persCam, orthCam });
+    const sketch = new Cyborg({ composer, scene });
 
-    startAnimation(() => {
-      sketch.update();
+    startAnimation(info => {
+      sketch.update(info);
     });
   }, []);
 

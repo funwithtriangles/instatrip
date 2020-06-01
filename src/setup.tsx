@@ -63,15 +63,21 @@ if (devMode.fps) {
   document.body.appendChild(stats.dom);
 }
 
-export const startAnimation = (cb?: (deltaFPS: number) => void) => {
+interface AnimationInfo {
+  deltaFPS: number;
+  elapsedS: number;
+}
+
+export const startAnimation = (cb?: (info: AnimationInfo) => void) => {
   const animate = async () => {
     window.requestAnimationFrame(animate);
     stats.begin();
     const delta = clock.getDelta();
+    const elapsedS = clock.getElapsedTime();
     const deltaFPS = delta * 60;
 
     if (cb) {
-      cb(deltaFPS);
+      cb({ deltaFPS, elapsedS });
     }
 
     updateFaceMesh();
