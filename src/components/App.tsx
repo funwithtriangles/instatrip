@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { renderer, composer, scene, startAnimation } from '../setup';
 import { Thumbs } from './Thumbs';
 
 import { Cyborg } from '../sketches/Cyborg.js';
+import { Beauty } from '../sketches/Beauty.js';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -25,24 +26,37 @@ const CanvasContainer = styled.div`
 
 const div = document.createElement('div');
 
+const sketches = [Cyborg, Beauty];
+
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(div);
+  const currentSketch = useRef<Cyborg | Beauty>();
+
+  const [sketchIndex, setSketchIndex] = useState(0);
 
   // Will only fire once
   useEffect(() => {
     containerRef.current.appendChild(renderer.domElement);
 
-    const sketch = new Cyborg({ composer, scene });
-
     startAnimation(info => {
-      sketch.update(info);
+      if (currentSketch && currentSketch.current) {
+        currentSketch!.current!.update(info);
+      }
     });
   }, []);
+
+  useEffect(() => {
+    composer.reset();
+    while (scene.children.length > 0) {
+      scene.remove(scene.children[0]);
+    }
+    currentSketch.current = new sketches[sketchIndex]({ composer, scene });
+  }, [sketchIndex]);
 
   return (
     <Wrapper>
       <CanvasContainer ref={containerRef} />
-      <Thumbs />
+      <Thumbs setSketchIndex={setSketchIndex} />
     </Wrapper>
   );
 }

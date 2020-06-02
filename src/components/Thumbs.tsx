@@ -27,18 +27,22 @@ const Item = styled.div`
   }
 `;
 
-export function Thumbs() {
+type ThumbsProps = {
+  setSketchIndex: (index: number) => void;
+};
+
+export function Thumbs({ setSketchIndex }: ThumbsProps) {
   const flickityRef = useRef<Flickity>();
 
   useEffect(() => {
     if (flickityRef.current !== undefined) {
       flickityRef.current.on('settle', (index: number) => {
-        console.log(index);
+        setSketchIndex(index);
       });
     } else {
       console.error('Flickity ref not available');
     }
-  }, []);
+  }, [setSketchIndex]);
 
   return (
     <Nav>

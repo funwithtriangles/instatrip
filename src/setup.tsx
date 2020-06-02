@@ -63,7 +63,7 @@ if (devMode.fps) {
   document.body.appendChild(stats.dom);
 }
 
-interface AnimationInfo {
+export interface AnimationInfo {
   deltaFPS: number;
   elapsedS: number;
 }
