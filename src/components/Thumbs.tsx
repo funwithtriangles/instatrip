@@ -1,0 +1,58 @@
+import React, { useRef, useEffect } from 'react';
+import styled from 'styled-components';
+import Flickity from 'react-flickity-component';
+
+const Nav = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+`;
+
+const Item = styled.div`
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid white;
+  border-radius: 999px;
+  width: 6rem;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  margin: 0.5rem;
+  transition: 0.2s;
+  transform: scale(0.7);
+
+  &.is-selected {
+    transform: scale(1);
+  }
+`;
+
+export function Thumbs() {
+  const flickityRef = useRef<Flickity>();
+
+  useEffect(() => {
+    if (flickityRef.current !== undefined) {
+      flickityRef.current.on('settle', (index: number) => {
+        console.log(index);
+      });
+    } else {
+      console.error('Flickity ref not available');
+    }
+  }, []);
+
+  return (
+    <Nav>
+      <Flickity
+        flickityRef={c => (flickityRef.current = c)}
+        options={{
+          prevNextButtons: false,
+          pageDots: false,
+        }}
+      >
+        <Item>🤖</Item>
+        <Item>🥰</Item>
+        <Item>🔥</Item>
+      </Flickity>
+    </Nav>
+  );
+}

@@ -1,7 +1,17 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { renderer, composer, scene, startAnimation } from '../setup';
+import { Thumbs } from './Thumbs';
+
 import { Cyborg } from '../sketches/Cyborg.js';
+
+const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+`;
 
 const CanvasContainer = styled.div`
   canvas {
@@ -29,5 +39,10 @@ export default function App() {
     });
   }, []);
 
-  return <CanvasContainer ref={containerRef} />;
+  return (
+    <Wrapper>
+      <CanvasContainer ref={containerRef} />
+      <Thumbs />
+    </Wrapper>
+  );
 }
