@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Flickity from 'react-flickity-component';
 import { sketches } from '../sketches';
@@ -30,20 +30,39 @@ const Item = styled.div`
 
 type ThumbsProps = {
   setSketchIndex: (index: number) => void;
+  sketchIndex: number;
 };
 
-export function Thumbs({ setSketchIndex }: ThumbsProps) {
+export function Thumbs({ setSketchIndex, sketchIndex }: ThumbsProps) {
   const flickityRef = useRef<Flickity>();
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     if (flickityRef.current !== undefined) {
       flickityRef.current.on('settle', (index: number) => {
         setSketchIndex(index);
+        setIsDragging(false);
+      });
+
+      flickityRef.current.on('dragStart', () => {
+        setIsDragging(true);
       });
     } else {
       console.error('Flickity ref not available');
     }
   }, [setSketchIndex]);
+
+  useEffect(() => {
+    if (flickityRef.current !== undefined) {
+      flickityRef.current.select(sketchIndex);
+    }
+  }, [sketchIndex]);
+
+  const onItemClick = (index: number) => {
+    if (!isDragging) {
+      setSketchIndex(index);
+    }
+  };
 
   return (
     <Nav>
@@ -54,8 +73,10 @@ export function Thumbs({ setSketchIndex }: ThumbsProps) {
           pageDots: false,
         }}
       >
-        {sketches.map(sketch => (
-          <Item>{sketch.icon}</Item>
+        {sketches.map((sketch, index) => (
+          <Item key={index} onClick={() => onItemClick(index)}>
+            {sketch.icon}
+          </Item>
         ))}
       </Flickity>
     </Nav>

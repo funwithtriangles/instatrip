@@ -55,7 +55,7 @@ export default function App() {
   return (
     <Wrapper>
       <CanvasContainer ref={containerRef} />
-      <Thumbs setSketchIndex={setSketchIndex} />
+      <Thumbs setSketchIndex={setSketchIndex} sketchIndex={sketchIndex} />
     </Wrapper>
   );
 }
