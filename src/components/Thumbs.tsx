@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import Flickity from 'react-flickity-component';
+import { sketches } from '../sketches';
 
 const Nav = styled.div`
   position: absolute;
@@ -53,9 +54,9 @@ export function Thumbs({ setSketchIndex }: ThumbsProps) {
           pageDots: false,
         }}
       >
-        <Item>🤖</Item>
-        <Item>🥰</Item>
-        <Item>🔥</Item>
+        {sketches.map(sketch => (
+          <Item>{sketch.icon}</Item>
+        ))}
       </Flickity>
     </Nav>
   );

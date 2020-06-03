@@ -2,9 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { renderer, composer, scene, startAnimation } from '../setup';
 import { Thumbs } from './Thumbs';
-
-import { Cyborg } from '../sketches/Cyborg.js';
-import { Beauty } from '../sketches/Beauty.js';
+import { sketches, SketchesType } from '../sketches';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -26,11 +24,9 @@ const CanvasContainer = styled.div`
 
 const div = document.createElement('div');
 
-const sketches = [Cyborg, Beauty];
-
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(div);
-  const currentSketch = useRef<Cyborg | Beauty>();
+  const currentSketch = useRef<SketchesType>();
 
   const [sketchIndex, setSketchIndex] = useState(0);
 
@@ -40,7 +36,7 @@ export default function App() {
 
     startAnimation(info => {
       if (currentSketch && currentSketch.current) {
-        currentSketch!.current!.update(info);
+        currentSketch.current.update(info);
       }
     });
   }, []);
@@ -50,7 +46,10 @@ export default function App() {
     while (scene.children.length > 0) {
       scene.remove(scene.children[0]);
     }
-    currentSketch.current = new sketches[sketchIndex]({ composer, scene });
+    currentSketch.current = new sketches[sketchIndex].Module({
+      composer,
+      scene,
+    });
   }, [sketchIndex]);
 
   return (
