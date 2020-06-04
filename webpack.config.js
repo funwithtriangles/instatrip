@@ -24,6 +24,14 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        use: ['file-loader'],
+      },
+      {
+        test: /\.(glsl|frag|vert)$/,
+        use: ['raw-loader'],
+      },
     ],
   },
   resolve: {

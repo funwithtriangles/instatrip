@@ -1,45 +1,64 @@
 import {
-  BlendFunction,
   EffectPass,
   TextureEffect,
   SavePass,
+  BlurPass,
+  KernelSize,
 } from 'postprocessing';
 
-import { Mesh, BackSide, MeshNormalMaterial } from 'three';
+import { Mesh, MeshBasicMaterial, TextureLoader } from 'three';
 import { webcamEffect, renderPass } from '../setup';
+import { camTexture } from '../webcam';
+import { FaceDetailEffect } from '../effects/FaceDetailEffect';
 
-import { faceGeometry, metrics } from '../faceMesh';
+import { faceGeometry } from '../faceMesh';
+
+import mapUrl from '../assets/face_highlights.jpg';
 
 export class Beauty {
   constructor({ composer, scene }) {
-    const shinyMat = new MeshNormalMaterial({
-      side: BackSide,
+    const colorTexture = new TextureLoader().load(mapUrl);
+    const mat = new MeshBasicMaterial({
+      map: colorTexture,
     });
 
-    this.shinyMesh = new Mesh(faceGeometry, shinyMat);
+    this.mesh = new Mesh(faceGeometry, mat);
 
-    scene.add(this.shinyMesh);
+    scene.add(this.mesh);
+
+    const camTexEffect = new TextureEffect({
+      texture: camTexture,
+    });
+
+    const camPass = new EffectPass(null, camTexEffect);
+
+    const blurPass = new BlurPass({
+      scale: 0.5,
+      kernelSize: KernelSize.MEDIUM,
+    });
+
+    const blurSavePass = new SavePass();
 
     const renderSavePass = new SavePass();
 
-    const renderTexture = new TextureEffect({
-      texture: renderSavePass.renderTarget.texture,
-      blendFunction: BlendFunction.LIGHTEN,
+    const faceDetailEffect = new FaceDetailEffect({
+      camTexture: blurSavePass.renderTarget.texture,
+      maskTexture: renderSavePass.renderTarget.texture,
     });
 
     const combineTexturesPass = new EffectPass(
       null,
       webcamEffect,
-      renderTexture
+      faceDetailEffect
     );
 
     composer.addPass(renderPass);
     composer.addPass(renderSavePass);
+    composer.addPass(camPass);
+    composer.addPass(blurPass);
+    composer.addPass(blurSavePass);
     composer.addPass(combineTexturesPass);
   }
 
-  update() {
-    const s = 1 + metrics.mouthOpenness;
-    this.shinyMesh.scale.set(s, s, s);
-  }
+  update() {}
 }

@@ -9,7 +9,6 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
-  BackSide,
   DirectionalLight,
 } from 'three';
 import { webcamEffect, renderPass } from '../setup';
@@ -23,14 +22,12 @@ export class Cyborg {
     scene.add(this.dLight);
 
     const shinyMat = new MeshStandardMaterial({
-      side: BackSide,
       metalness: 1,
       roughness: 0.5,
       color: 0xffffff,
     });
     this.wireMat = new MeshBasicMaterial({
       color: 0xffffff,
-      side: BackSide,
       wireframe: true,
       opacity: 0.2,
       transparent: true,
