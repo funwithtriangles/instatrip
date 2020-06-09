@@ -1,14 +1,7 @@
-import {
-  EffectPass,
-  TextureEffect,
-  SavePass,
-  BlurPass,
-  KernelSize,
-} from 'postprocessing';
+import { EffectPass, SavePass, BlurPass, KernelSize } from 'postprocessing';
 
 import { Mesh, MeshBasicMaterial, TextureLoader } from 'three';
 import { webcamEffect, renderPass } from '../setup';
-import { camTexture } from '../webcam';
 import { FaceDetailEffect } from '../effects/FaceDetailEffect';
 
 import { faceGeometry } from '../faceMesh';
@@ -26,11 +19,7 @@ export class Beauty {
 
     scene.add(this.mesh);
 
-    const camTexEffect = new TextureEffect({
-      texture: camTexture,
-    });
-
-    const camPass = new EffectPass(null, camTexEffect);
+    const camPass = new EffectPass(null, webcamEffect);
 
     const blurPass = new BlurPass({
       scale: 0.5,

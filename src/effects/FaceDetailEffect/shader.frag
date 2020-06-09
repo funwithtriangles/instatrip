@@ -3,7 +3,7 @@ uniform sampler2D maskTexture;
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
   vec2 st = uv ;
-  st.x = (st.x - 0.5) * -1. + 0.5;
+  st.x = (st.x - 0.5) + 0.5;
 
   float mask = texture2D(maskTexture, uv).r;
     

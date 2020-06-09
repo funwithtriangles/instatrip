@@ -3,6 +3,9 @@ import {
   EffectPass,
   TextureEffect,
   SavePass,
+  ScanlineEffect,
+  GlitchEffect,
+  HueSaturationEffect,
 } from 'postprocessing';
 
 import {
@@ -14,6 +17,7 @@ import {
 import { webcamEffect, renderPass } from '../setup';
 
 import { faceGeometry, metrics } from '../faceMesh';
+import { ColorOverlayEffect } from '../effects/ColorOverlayEffect';
 
 export class Cyborg {
   constructor({ composer, scene }) {
@@ -45,10 +49,25 @@ export class Cyborg {
       blendFunction: BlendFunction.LIGHTEN,
     });
 
+    const scanlineEffect = new ScanlineEffect();
+    scanlineEffect.blendMode.opacity.value = 0.1;
+
+    const glitchEffect = new GlitchEffect();
+
+    const hueSaturationEffect = new HueSaturationEffect({
+      saturation: -1,
+    });
+
+    const colorOverlayEffect = new ColorOverlayEffect();
+
     const combineTexturesPass = new EffectPass(
       null,
       webcamEffect,
-      renderTexture
+      renderTexture,
+      hueSaturationEffect,
+      colorOverlayEffect,
+      glitchEffect,
+      scanlineEffect
     );
 
     composer.addPass(renderPass);
