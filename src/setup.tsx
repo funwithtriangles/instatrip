@@ -21,7 +21,7 @@ export const persCam = new PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
-  1000
+  10000
 );
 
 export const orthCam = new OrthographicCamera(1, 1, 1, 1, -1000, 1000);

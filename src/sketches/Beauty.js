@@ -22,8 +22,8 @@ export class Beauty {
     const camPass = new EffectPass(null, webcamEffect);
 
     const blurPass = new BlurPass({
-      scale: 0.5,
-      kernelSize: KernelSize.MEDIUM,
+      scale: 0.1,
+      kernelSize: KernelSize.SMALL,
     });
 
     const blurSavePass = new SavePass();
