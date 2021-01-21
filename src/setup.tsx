@@ -13,8 +13,13 @@ import { camTexture, video } from './webcam';
 import { getResizeFactors } from './utils/getResizeFactors';
 import { faceGeometry, updateFaceMesh, initFaceMesh } from './faceMesh';
 
-export const renderer = new WebGLRenderer({ antialias: true, alpha: true });
-export const composer = new EffectComposer(renderer);
+export const renderer = new WebGLRenderer({
+  antialias: true,
+  alpha: true,
+});
+export const composer = new EffectComposer(renderer, {
+  stencilBuffer: true,
+});
 export const clock = new Clock();
 export const stats = new Stats();
 export const persCam = new PerspectiveCamera(
