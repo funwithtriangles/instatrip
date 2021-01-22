@@ -96,7 +96,7 @@ export class Cyborg {
     );
 
     composer.addPass(renderPass);
-    composer.addPass(effectsPass);
+    // composer.addPass(effectsPass);
   }
 
   update({ elapsedS }) {

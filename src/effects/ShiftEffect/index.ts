@@ -10,7 +10,7 @@ interface ShiftEffectProps {
 export class ShiftEffect extends Effect {
   constructor({ prevFrameTex }: ShiftEffectProps) {
     super('ShiftEffect', fragment, {
-      blendFunction: BlendFunction.ALPHA,
+      blendFunction: BlendFunction.NORMAL,
       uniforms: new Map([['prevFrameTex', new Uniform(prevFrameTex)]]),
     });
   }

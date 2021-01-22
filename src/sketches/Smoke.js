@@ -47,18 +47,29 @@ export class Smoke {
 
     const saveShiftPass = new SavePass();
 
+    const saveAllPass = new SavePass();
+
     const shiftEffect = new ShiftEffect({
-      prevFrameTex: saveMaskPass.renderTarget.texture,
+      prevFrameTex: saveShiftPass.renderTarget.texture,
     });
 
     const shiftEffectPass = new EffectPass(null, shiftEffect);
 
-    const tempTexEffect = new TextureEffect({
+    const smokeTexEffect = new TextureEffect({
       texture: saveShiftPass.renderTarget.texture,
+      blendFunction: BlendFunction.ALPHA,
     });
-    const tempTexPass = new EffectPass(null, tempTexEffect);
+
+    const overlayShiftPass = new EffectPass(null, webcamEffect, smokeTexEffect);
 
     const soloFacePass = new EffectPass(null, faceSoloEffect);
+
+    const blurPass = new BlurPass({
+      KernelSize: KernelSize.SMALL,
+    });
+    blurPass.scale = 0.01;
+
+    composer.addPass(clearPass);
 
     // Solo out face and save it
     composer.addPass(maskPass);
@@ -66,12 +77,15 @@ export class Smoke {
     composer.addPass(clearMaskPass);
     composer.addPass(saveMaskPass);
 
-    composer.addPass(clearPass);
-
     // Render face texture with fading and shifting
     composer.addPass(shiftEffectPass);
+    composer.addPass(blurPass);
+
     // Paint masked face on top
     composer.addPass(soloFacePass);
+    composer.addPass(saveShiftPass);
+
+    composer.addPass(overlayShiftPass);
   }
 
   update({ elapsedS }) {}
