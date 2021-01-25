@@ -13,66 +13,47 @@ import {
   SavePass,
   TextureEffect,
   BlendFunction,
-  BlendMode,
 } from 'postprocessing';
 
-import {
-  Mesh,
-  MeshBasicMaterial,
-  Color,
-  Texture,
-  Group,
-  TextureLoader,
-  CircleBufferGeometry,
-} from 'three';
+import { Mesh, MeshBasicMaterial, Color, Texture } from 'three';
 import { renderPass, webcamEffect, orthCam } from '../setup';
 
-import { faceGeometry, metrics, trackFace } from '../faceMesh';
+import { faceGeometry, metrics } from '../faceMesh';
 import { ColorOverlayEffect } from '../effects/ColorOverlayEffect';
-import { SmokeEffect } from '../effects/SmokeEffect';
+import { ShiftEffect } from '../effects/ShiftEffect';
 import { camTexture } from '../webcam';
 import { FaceDetailEffect } from '../effects/FaceDetailEffect';
 
-import eyesUrl from '../assets/eyes_inverted.jpg';
+const mat = new MeshBasicMaterial({ color: 0x000000 });
 
-const whiteMat = new MeshBasicMaterial({
-  color: 0xffffff,
-});
-
-const eyesTex = new TextureLoader().load(eyesUrl);
-const mat = new MeshBasicMaterial({
-  map: eyesTex,
-});
-
-export class Smoke {
+export class Ghastly {
   constructor({ composer, scene }) {
-    this.trackGroup = new Group();
-    scene.add(this.trackGroup);
-
     /* Mask mesh */
     const mesh = new Mesh(faceGeometry, mat);
-    const mouthPlane = new CircleBufferGeometry(100, 16);
-
-    const mouthMesh = new Mesh(mouthPlane, whiteMat);
-    mouthMesh.scale.set(1, 0.5, 1);
-    mouthMesh.position.set(0, -100, -50);
-
-    this.trackGroup.add(mouthMesh);
     scene.add(mesh);
 
-    scene.background = new Color(0x000000);
+    const clearPass = new ClearPass();
+    const maskPass = new MaskPass(scene, orthCam);
+    const clearMaskPass = new ClearMaskPass();
+
+    const saveMaskPass = new SavePass();
 
     const camPass = new EffectPass(null, webcamEffect);
+
+    const faceSoloEffect = new TextureEffect({
+      texture: saveMaskPass.renderTarget.texture,
+      blendFunction: BlendFunction.ALPHA,
+    });
 
     const saveShiftPass = new SavePass();
 
     const saveAllPass = new SavePass();
 
-    const smokeEffect = new SmokeEffect({
+    const shiftEffect = new ShiftEffect({
       prevFrameTex: saveShiftPass.renderTarget.texture,
     });
 
-    const shiftEffectPass = new EffectPass(null, smokeEffect);
+    const shiftEffectPass = new EffectPass(null, shiftEffect);
 
     const smokeTexEffect = new TextureEffect({
       texture: saveShiftPass.renderTarget.texture,
@@ -81,21 +62,31 @@ export class Smoke {
 
     const overlayShiftPass = new EffectPass(null, webcamEffect, smokeTexEffect);
 
+    const soloFacePass = new EffectPass(null, faceSoloEffect);
+
     const blurPass = new BlurPass({
       KernelSize: KernelSize.SMALL,
     });
     blurPass.scale = 0.01;
 
-    composer.addPass(renderPass);
+    composer.addPass(clearPass);
 
+    // Solo out face and save it
+    composer.addPass(maskPass);
+    composer.addPass(camPass);
+    composer.addPass(clearMaskPass);
+    composer.addPass(saveMaskPass);
+
+    // Render face texture with fading and shifting
     composer.addPass(shiftEffectPass);
     composer.addPass(blurPass);
 
+    // Paint masked face on top
+    composer.addPass(soloFacePass);
     composer.addPass(saveShiftPass);
+
     composer.addPass(overlayShiftPass);
   }
 
-  update() {
-    trackFace(this.trackGroup);
-  }
+  update({ elapsedS }) {}
 }

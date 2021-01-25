@@ -30,7 +30,7 @@ module.exports = {
       },
       {
         test: /\.(glsl|frag|vert)$/,
-        use: ['raw-loader'],
+        use: ['raw-loader', 'glslify-loader'],
       },
     ],
   },

@@ -7,14 +7,14 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   vec2 st = uv - vec2(0.5);
   st.x *= resolution.x/resolution.y;
 
-	st.y += 0.004;
+	st.y -= 0.004;
 
 	float noise = snoise(vec3(st, time * 0.01) * 20.) * PI * 2.;
 
 	st.x += cos(noise) * 0.002;
 	st.y += sin(noise) * 0.003;
 
-	st *= rotate2d(0.02);
+	st *= rotate2d(0.01);
 
 
 	// Remap back to UV coords
@@ -23,12 +23,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 
 	vec4 col = texture2D(prevFrameTex, st);
 
-	if (col.r > 0.) {
-		col.a *= 0.997;
-	} else {
-		col.a = 0.;
-	}
-
 	
-	outputColor = col;
+	outputColor = col + inputColor;
+	outputColor.a = outputColor.r;
 }

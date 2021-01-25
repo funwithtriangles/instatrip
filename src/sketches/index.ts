@@ -1,5 +1,6 @@
 import { Beauty } from './Beauty';
 import { Cyborg } from './Cyborg';
+import { Ghastly } from './Ghastly';
 import { Smoke } from './Smoke';
 
 export const sketches = [
@@ -13,6 +14,10 @@ export const sketches = [
   },
   {
     Module: Smoke,
+    icon: '🚬',
+  },
+  {
+    Module: Ghastly,
     icon: '🔥',
   },
   {
@@ -23,4 +28,4 @@ export const sketches = [
 
 // TODO: Create this type using the above structure
 // https://stackoverflow.com/questions/45251664/typescript-derive-union-type-from-tuple-array-values
-export type SketchesType = Cyborg | Beauty | Smoke;
+export type SketchesType = Cyborg | Beauty | Smoke | Ghastly;

@@ -1,5 +1,5 @@
 import * as facemesh from '@tensorflow-models/facemesh';
-import { Vector3 } from 'three';
+import { Vector3, Object3D, Matrix4 } from 'three';
 import { video } from './webcam';
 import { FaceMeshFaceGeometry } from './FaceMeshFaceGeometry/face';
 
@@ -8,6 +8,11 @@ export const faceGeometry = new FaceMeshFaceGeometry();
 
 export const metrics = {
   mouthOpenness: 0,
+  track: {
+    position: new Vector3(),
+    normal: new Vector3(),
+    rotation: new Matrix4(),
+  },
 };
 
 const lipTop = new Vector3();
@@ -37,6 +42,13 @@ export const updateFaceMesh = async () => {
       lipBot.set(top[0], bot[1], bot[2]);
 
       metrics.mouthOpenness = lipBot.distanceTo(lipTop) / 25;
+
+      metrics.track = faceGeometry.track(5, 45, 275);
     }
   }
+};
+
+export const trackFace = (object: Object3D) => {
+  object.position.copy(metrics.track.position);
+  object.rotation.setFromRotationMatrix(metrics.track.rotation);
 };
