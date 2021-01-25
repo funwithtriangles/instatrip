@@ -1,9 +1,13 @@
-import * as facemesh from '@tensorflow-models/facemesh';
+import * as tf from '@tensorflow/tfjs';
+
+import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
 import { Vector3, Object3D, Matrix4 } from 'three';
 import { video } from './webcam';
 import { FaceMeshFaceGeometry } from './FaceMeshFaceGeometry/face';
 
-let faceMeshModel: facemesh.FaceMesh;
+import '@tensorflow/tfjs-backend-wasm';
+
+let faceMeshModel: faceLandmarksDetection.FaceLandmarksPackage;
 export const faceGeometry = new FaceMeshFaceGeometry();
 
 export const metrics = {
@@ -19,14 +23,23 @@ const lipTop = new Vector3();
 const lipBot = new Vector3();
 
 export const initFaceMesh = async () => {
-  faceMeshModel = await facemesh.load({
-    maxFaces: 1,
-  });
+  await tf.setBackend('wasm');
+  faceMeshModel = await faceLandmarksDetection.load(
+    faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+    {
+      shouldLoadIrisModel: true,
+      maxFaces: 1,
+    }
+  );
 };
 
 export const updateFaceMesh = async () => {
   if (faceMeshModel) {
-    const faces = await faceMeshModel.estimateFaces(video, false, true);
+    const faces = await faceMeshModel.estimateFaces({
+      input: video,
+      returnTensors: false,
+      flipHorizontal: true,
+    });
     if (faces.length) {
       const face = faces[0];
       faceGeometry.update(face, true);
