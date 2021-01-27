@@ -8,7 +8,11 @@ import {
   Triangle,
   Matrix4,
 } from 'three';
-import { FACES as indices, UVS as texCoords } from './geometry.js';
+import {
+  FACES as indices,
+  MOUTH_FACES as mouthIndices,
+  UVS as texCoords,
+} from './geometry.js';
 
 class FaceMeshFaceGeometry extends BufferGeometry {
   constructor(options = {}) {
@@ -22,7 +26,7 @@ class FaceMeshFaceGeometry extends BufferGeometry {
     this.setAttribute('position', new BufferAttribute(this.positions, 3));
     this.setAttribute('uv', new BufferAttribute(this.uvs, 2));
     this.setUvs();
-    this.setIndex(indices);
+    this.setIndex([...indices, ...mouthIndices]);
     this.computeVertexNormals();
     this.applyMatrix4(new Matrix4().makeScale(10, 10, 10));
     this.p0 = new Vector3();

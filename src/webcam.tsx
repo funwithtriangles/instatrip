@@ -12,7 +12,7 @@ if (devMode.fakeCam) {
   video.play();
 } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   const constraints = {
-    video: { width: 1280, height: 720, facingMode: 'user' },
+    video: { facingMode: 'user' },
   };
 
   navigator.mediaDevices

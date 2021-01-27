@@ -1,78 +1,40 @@
 import {
   EffectPass,
-  ScanlineEffect,
-  GlitchEffect,
-  HueSaturationEffect,
-  ColorDepthEffect,
-  MaskPass,
-  ClearPass,
   BlurPass,
   KernelSize,
-  ClearMaskPass,
-  Effect,
   SavePass,
   TextureEffect,
   BlendFunction,
-  BlendMode,
 } from 'postprocessing';
 
-import {
-  Mesh,
-  MeshBasicMaterial,
-  Color,
-  Texture,
-  Group,
-  TextureLoader,
-  CircleBufferGeometry,
-} from 'three';
-import { renderPass, webcamEffect, orthCam } from '../setup';
+import { Mesh, MeshBasicMaterial, TextureLoader } from 'three';
+import { renderPass, webcamEffect } from '../setup';
 
-import { faceGeometry, metrics, trackFace } from '../faceMesh';
-import { ColorOverlayEffect } from '../effects/ColorOverlayEffect';
+import { faceGeometry } from '../faceMesh';
 import { SmokeEffect } from '../effects/SmokeEffect';
-import { camTexture } from '../webcam';
-import { FaceDetailEffect } from '../effects/FaceDetailEffect';
 
-import eyesUrl from '../assets/eyes_inverted.jpg';
+import eyesMouthUrl from '../assets/eyes_mouth_inverted.png';
 
-const whiteMat = new MeshBasicMaterial({
-  color: 0xffffff,
-});
-
-const eyesTex = new TextureLoader().load(eyesUrl);
+const eyesMouthTex = new TextureLoader().load(eyesMouthUrl);
 const mat = new MeshBasicMaterial({
-  map: eyesTex,
+  map: eyesMouthTex,
+  transparent: true,
 });
 
 export class Smoke {
   constructor({ composer, scene }) {
-    this.trackGroup = new Group();
-    scene.add(this.trackGroup);
-
-    /* Mask mesh */
+    // Add mesh with eyes/mouth/nostrils texture
     const mesh = new Mesh(faceGeometry, mat);
-    const mouthPlane = new CircleBufferGeometry(100, 16);
-
-    const mouthMesh = new Mesh(mouthPlane, whiteMat);
-    mouthMesh.scale.set(1, 0.5, 1);
-    mouthMesh.position.set(0, -100, -50);
-
-    this.trackGroup.add(mouthMesh);
     scene.add(mesh);
 
-    scene.background = new Color(0x000000);
-
-    const camPass = new EffectPass(null, webcamEffect);
-
+    // Setup all the passes used below
     const saveShiftPass = new SavePass();
-
-    const saveAllPass = new SavePass();
 
     const smokeEffect = new SmokeEffect({
       prevFrameTex: saveShiftPass.renderTarget.texture,
     });
 
-    const shiftEffectPass = new EffectPass(null, smokeEffect);
+    const smokeEffectPass = new EffectPass(null, smokeEffect);
 
     const smokeTexEffect = new TextureEffect({
       texture: saveShiftPass.renderTarget.texture,
@@ -84,18 +46,19 @@ export class Smoke {
     const blurPass = new BlurPass({
       KernelSize: KernelSize.SMALL,
     });
-    blurPass.scale = 0.01;
+    blurPass.scale = 0.2;
 
+    // Render eyes, mouth, nostrils
     composer.addPass(renderPass);
-
-    composer.addPass(shiftEffectPass);
+    // Add previous frame and manipulate for smoke effect
+    composer.addPass(smokeEffectPass);
+    // Blur each frame
     composer.addPass(blurPass);
-
+    // Save frame to be fed into next frame
     composer.addPass(saveShiftPass);
+    // Render webcam image and overlay smoke
     composer.addPass(overlayShiftPass);
   }
 
-  update() {
-    trackFace(this.trackGroup);
-  }
+  update() {}
 }
