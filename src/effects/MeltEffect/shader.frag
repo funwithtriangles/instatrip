@@ -16,9 +16,10 @@ void mainImage(const in vec4 headCol, const in vec2 uv, out vec4 outputColor) {
   vec2 st = uv - vec2(0.5);
   st.x *= resolution.x/resolution.y;
 
+	// generate noise
 	vec2 F = worley2x2x2(vec3(st, time * 0.1) * 5., 1., true);
 	float noise0 = F.y - F.x;
-
+	// Bitcrushing the angle to make it more jagged
 	float angle0 = crush(F.y * PI * 2., 1.);
 
 	// scale based on input
