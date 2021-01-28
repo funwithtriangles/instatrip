@@ -1,7 +1,5 @@
 import {
   EffectPass,
-  BlurPass,
-  KernelSize,
   SavePass,
   TextureEffect,
   BlendFunction,
@@ -51,11 +49,6 @@ export class Melt {
     });
 
     const overlayMeltPass = new EffectPass(null, webcamEffect, meltTexEffect);
-
-    const blurPass = new BlurPass({
-      KernelSize: KernelSize.SMALL,
-    });
-    blurPass.scale = 0.2;
 
     composer.addPass(renderPass);
     composer.addPass(saveFeaturesPass);
