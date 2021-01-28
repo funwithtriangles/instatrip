@@ -6,7 +6,7 @@ export const video = document.createElement('video');
 export const camTexture = new THREE.VideoTexture(video);
 
 if (devMode.fakeCam) {
-  video.src = 'testface.mp4';
+  video.src = devMode.fakeCam;
   video.loop = true;
   video.muted = true;
   video.play();

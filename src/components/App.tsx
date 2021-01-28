@@ -28,7 +28,7 @@ export default function App() {
   const containerRef = useRef<HTMLDivElement>(div);
   const currentSketch = useRef<SketchesType>();
 
-  const [sketchIndex, setSketchIndex] = useState(2);
+  const [sketchIndex, setSketchIndex] = useState(3);
 
   // Will only fire once
   useEffect(() => {

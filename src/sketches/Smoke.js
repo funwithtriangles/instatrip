@@ -28,20 +28,20 @@ export class Smoke {
     scene.add(mesh);
 
     // Setup all the passes used below
-    const saveShiftPass = new SavePass();
+    const saveSmokePass = new SavePass();
 
     const smokeEffect = new SmokeEffect({
-      prevFrameTex: saveShiftPass.renderTarget.texture,
+      prevFrameTex: saveSmokePass.renderTarget.texture,
     });
 
     const smokeEffectPass = new EffectPass(null, smokeEffect);
 
     const smokeTexEffect = new TextureEffect({
-      texture: saveShiftPass.renderTarget.texture,
+      texture: saveSmokePass.renderTarget.texture,
       blendFunction: BlendFunction.ALPHA,
     });
 
-    const overlayShiftPass = new EffectPass(null, webcamEffect, smokeTexEffect);
+    const overlaySmokePass = new EffectPass(null, webcamEffect, smokeTexEffect);
 
     const blurPass = new BlurPass({
       KernelSize: KernelSize.SMALL,
@@ -55,9 +55,9 @@ export class Smoke {
     // Blur each frame
     composer.addPass(blurPass);
     // Save frame to be fed into next frame
-    composer.addPass(saveShiftPass);
+    composer.addPass(saveSmokePass);
     // Render webcam image and overlay smoke
-    composer.addPass(overlayShiftPass);
+    composer.addPass(overlaySmokePass);
   }
 
   update() {}
