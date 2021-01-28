@@ -59,6 +59,4 @@ export class Smoke {
     // Render webcam image and overlay smoke
     composer.addPass(overlaySmokePass);
   }
-
-  update() {}
 }

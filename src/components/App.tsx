@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { renderer, composer, scene, startAnimation } from '../setup';
 import { Thumbs } from './Thumbs';
-import { sketches, SketchesType } from '../sketches';
+import { sketches, SketchInterface } from '../sketches';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -26,16 +26,20 @@ const div = document.createElement('div');
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(div);
-  const currentSketch = useRef<SketchesType>();
+  const currentSketch = useRef<SketchInterface>();
 
-  const [sketchIndex, setSketchIndex] = useState(3);
+  const [sketchIndex, setSketchIndex] = useState(2);
 
   // Will only fire once
   useEffect(() => {
     containerRef.current.appendChild(renderer.domElement);
 
     startAnimation(info => {
-      if (currentSketch && currentSketch.current) {
+      if (
+        currentSketch &&
+        currentSketch.current &&
+        currentSketch.current.update
+      ) {
         currentSketch.current.update(info);
       }
     });

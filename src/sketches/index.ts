@@ -1,31 +1,40 @@
-import { Beauty } from './Beauty';
-import { Cyborg } from './Cyborg';
-import { Melt } from './Melt';
-import { Smoke } from './Smoke';
+import { EffectComposer } from 'postprocessing';
+import { Scene } from 'three';
 
-export const sketches = [
-  {
-    Module: Cyborg,
-    icon: '🤖',
-  },
-  {
-    Module: Beauty,
-    icon: '🥰',
-  },
+import { AnimationInfo } from '../setup';
+import { Smoke } from './Smoke';
+import { Melt } from './Melt';
+import { Tunnel } from './Tunnel';
+
+interface SketchConstructorArgs {
+  composer: EffectComposer;
+  scene: Scene;
+}
+
+export interface SketchConstructor {
+  new (arg0: SketchConstructorArgs): SketchInterface;
+}
+
+export interface SketchInterface {
+  update?(arg0: AnimationInfo): void;
+}
+
+export interface SketchItem {
+  Module: SketchConstructor;
+  icon: string;
+}
+
+export const sketches: SketchItem[] = [
   {
     Module: Smoke,
     icon: '🚬',
   },
   {
     Module: Melt,
-    icon: '🔥',
+    icon: '💊',
   },
   {
-    Module: Beauty,
-    icon: '🤑',
+    Module: Tunnel,
+    icon: '🌈',
   },
 ];
-
-// TODO: Create this type using the above structure
-// https://stackoverflow.com/questions/45251664/typescript-derive-union-type-from-tuple-array-values
-export type SketchesType = Cyborg | Beauty | Smoke | Melt;
