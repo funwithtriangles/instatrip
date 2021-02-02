@@ -1,10 +1,12 @@
 import * as facemesh from '@tensorflow-models/facemesh';
-import { Vector3, Object3D, Matrix4 } from 'three';
+import { Vector3, Object3D, Matrix4, VideoTexture } from 'three';
 import { video } from './webcam';
 import { FaceMeshFaceGeometry } from './FaceMeshFaceGeometry/face';
 
 let faceMeshModel: facemesh.FaceMesh;
-export const faceGeometry = new FaceMeshFaceGeometry();
+export const faceGeometry = new FaceMeshFaceGeometry({
+  useVideoTexture: true,
+});
 
 export const metrics = {
   mouthOpenness: 0,

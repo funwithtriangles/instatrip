@@ -23,8 +23,10 @@ class FaceMeshFaceGeometry extends BufferGeometry {
     this.flipped = false;
     this.positions = new Float32Array(468 * 3);
     this.uvs = new Float32Array(468 * 2);
+    this.videoUvs = new Float32Array(468 * 2);
     this.setAttribute('position', new BufferAttribute(this.positions, 3));
     this.setAttribute('uv', new BufferAttribute(this.uvs, 2));
+    this.setAttribute('videoUv', new BufferAttribute(this.videoUvs, 2));
     this.setUvs();
     this.setIndex([...indices, ...mouthIndices]);
     this.computeVertexNormals();
@@ -46,13 +48,13 @@ class FaceMeshFaceGeometry extends BufferGeometry {
   setVideoUvs() {
     let ptr = 0;
     for (let j = 0; j < 468 * 2; j += 2) {
-      this.uvs[j] = this.flipped
+      this.videoUvs[j] = this.flipped
         ? this.positions[ptr] / this.w + 0.5
         : 1 - (this.positions[ptr] / this.w + 0.5);
-      this.uvs[j + 1] = this.positions[ptr + 1] / this.h + 0.5;
+      this.videoUvs[j + 1] = this.positions[ptr + 1] / this.h + 0.5;
       ptr += 3;
     }
-    this.getAttribute('uv').needsUpdate = true;
+    this.getAttribute('videoUv').needsUpdate = true;
   }
 
   setSize(w, h) {
@@ -70,6 +72,8 @@ class FaceMeshFaceGeometry extends BufferGeometry {
       this.positions[ptr + 2] = -p[2];
       ptr += 3;
     }
+
+    // Mod of Spite's original approach, we generate video UVs in a different attribute
     if (this.useVideoTexture) {
       this.setVideoUvs();
       if (this.normalizeCoords) {
@@ -83,10 +87,13 @@ class FaceMeshFaceGeometry extends BufferGeometry {
           ptr += 3;
         }
       }
-    } else if (cameraFlipped !== this.flipped) {
-      this.flipped = cameraFlipped;
+    }
+
+    if (cameraFlipped !== this.flipped) {
+      // this.flipped = cameraFlipped;
       this.setUvs();
     }
+
     this.attributes.position.needsUpdate = true;
     this.computeVertexNormals();
   }

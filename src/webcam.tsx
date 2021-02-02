@@ -4,6 +4,7 @@ import { devMode } from '../settings';
 
 export const video = document.createElement('video');
 export const camTexture = new THREE.VideoTexture(video);
+export const camTextureFlipped = new THREE.VideoTexture(video);
 
 if (devMode.fakeCam) {
   video.src = devMode.fakeCam;
@@ -38,8 +39,16 @@ const resize = () => {
     video.videoHeight
   );
 
-  if (camTexture.repeat.x > 0) {
-    camTexture.repeat.x *= -1; // Mirror cam
+  resizeTexture(
+    camTextureFlipped,
+    window.innerWidth,
+    window.innerHeight,
+    video.videoWidth,
+    video.videoHeight
+  );
+
+  if (camTextureFlipped.repeat.x > 0) {
+    camTextureFlipped.repeat.x *= -1; // Mirror cam
   }
 };
 

@@ -4,7 +4,7 @@ import { Scene } from 'three';
 import { AnimationInfo } from '../setup';
 import { Smoke } from './Smoke';
 import { Melt } from './Melt';
-import { Tunnel } from './Tunnel';
+import { Lumpy } from './Lumpy';
 
 interface SketchConstructorArgs {
   composer: EffectComposer;
@@ -34,7 +34,7 @@ export const sketches: SketchItem[] = [
     icon: '💊',
   },
   {
-    Module: Tunnel,
+    Module: Lumpy,
     icon: '🌈',
   },
 ];

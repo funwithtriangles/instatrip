@@ -9,7 +9,7 @@ import {
 } from 'three';
 
 import { devMode } from '../settings';
-import { camTexture, video } from './webcam';
+import { camTextureFlipped, video } from './webcam';
 import { getResizeFactors } from './utils/getResizeFactors';
 import { faceGeometry, updateFaceMesh, initFaceMesh } from './faceMesh';
 
@@ -33,7 +33,7 @@ export const orthCam = new OrthographicCamera(1, 1, 1, 1, -1000, 1000);
 export const scene = new Scene();
 
 export const webcamEffect = new TextureEffect({
-  texture: camTexture,
+  texture: camTextureFlipped,
 });
 webcamEffect.uvTransform = true;
 
