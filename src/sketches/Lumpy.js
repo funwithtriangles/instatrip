@@ -1,10 +1,10 @@
 import { EffectPass } from 'postprocessing';
 
-import { Mesh, TextureLoader, ShaderMaterial } from 'three';
+import { Mesh, TextureLoader, ShaderMaterial, Vector3 } from 'three';
 
 import { renderPass, webcamEffect } from '../setup';
 
-import { faceGeometry } from '../faceMesh';
+import { faceGeometry, metrics } from '../faceMesh';
 import { camTextureFlipped } from '../webcam';
 
 import faceHighlightsUrl from '../assets/face_highlights.jpg';
@@ -21,6 +21,7 @@ export class Lumpy {
         time: { value: 1.0 },
         camTex: { value: camTextureFlipped },
         fadeHighlightsTex: { value: faceHighlightsTex },
+        masterNormal: { value: new Vector3() },
       },
 
       vertexShader: vert,
@@ -45,5 +46,6 @@ export class Lumpy {
 
   update({ elapsedS }) {
     this.mat.uniforms.time.value = elapsedS;
+    this.mat.uniforms.masterNormal.value.copy(metrics.track.normal);
   }
 }

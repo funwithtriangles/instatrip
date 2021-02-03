@@ -3,6 +3,7 @@
 uniform float time;
 uniform sampler2D fadeHighlightsTex;
 uniform vec2 resolution;
+uniform vec3 masterNormal;
 
 attribute vec2 videoUv;
 varying vec2 vVideoUv;
@@ -22,8 +23,8 @@ void main()
   70. * edgeCol.r;
 
   vec3 modifiedNormal = normal + vec3(
-    sin(time * 5.) * 3., 
-    cos(time * 3.) * 3., 
+    sin(time * 1.) - masterNormal.x * 6., 
+    cos(time * 1.5) + masterNormal.y * 6., 
     0. 
   );
 
