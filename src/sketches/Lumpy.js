@@ -20,7 +20,7 @@ export class Lumpy {
       uniforms: {
         time: { value: 1.0 },
         camTex: { value: camTextureFlipped },
-        fadeHighlightsTex: { value: faceHighlightsTex },
+        faceHighlightsTex: { value: faceHighlightsTex },
         masterNormal: { value: new Vector3() },
       },
 

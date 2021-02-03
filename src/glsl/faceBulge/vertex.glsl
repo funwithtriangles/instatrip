@@ -1,7 +1,7 @@
 #pragma glslify: import('../../glsl/common.glsl')
 
 uniform float time;
-uniform sampler2D fadeHighlightsTex;
+uniform sampler2D faceHighlightsTex;
 uniform vec2 resolution;
 uniform vec3 masterNormal;
 
@@ -13,7 +13,7 @@ void main()
   vVideoUv = videoUv;
 
 
-  vec4 edgeCol = texture2D(fadeHighlightsTex, uv);
+  vec4 edgeCol = texture2D(faceHighlightsTex, uv);
 
   // float displacement = (snoise(vec3(uv * 2., time)) + 0.5) * 100. * edgeCol.r;
   
