@@ -1,6 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { renderer, composer, scene, startAnimation } from '../setup';
+import {
+  renderer,
+  composer,
+  scene,
+  startAnimation,
+  renderPass,
+} from '../setup';
 import { Thumbs } from './Thumbs';
 import { sketches, SketchInterface } from '../sketches';
 
@@ -28,7 +34,7 @@ export default function App() {
   const containerRef = useRef<HTMLDivElement>(div);
   const currentSketch = useRef<SketchInterface>();
 
-  const [sketchIndex, setSketchIndex] = useState(2);
+  const [sketchIndex, setSketchIndex] = useState(0);
 
   // Will only fire once
   useEffect(() => {
@@ -45,7 +51,10 @@ export default function App() {
     });
   }, []);
 
+  // Fires every time we change sketch
   useEffect(() => {
+    renderPass.renderToScreen = false;
+    renderPass.clear = true;
     composer.reset();
     while (scene.children.length > 0) {
       scene.remove(scene.children[0]);
