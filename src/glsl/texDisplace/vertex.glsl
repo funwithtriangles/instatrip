@@ -26,10 +26,10 @@ void main()
   );
 
   // Animate bulge
-  float noise = (sin(uv.x * 4. + time * 8.) + 1.) * .5;
+  float noise = (sin(uv.x * 4. + time * 2.) + 1.) * .5;
 
   // Displace
-  float displacement = (20. + 40. * noise) * dispCol.a ;
+  float displacement = (30. + 20. * noise) * dispCol.a ;
 
   vec3 newPosition = position + dispDir * displacement;
 

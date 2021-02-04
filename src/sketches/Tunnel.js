@@ -1,11 +1,20 @@
-import { EffectPass } from 'postprocessing';
+import {
+  BlendFunction,
+  ClearPass,
+  EffectPass,
+  SavePass,
+  TextureEffect,
+} from 'postprocessing';
 
-import { Mesh, TextureLoader, ShaderMaterial, Vector3 } from 'three';
+import { Mesh, TextureLoader, ShaderMaterial } from 'three';
 
-import { renderPass, webcamEffect } from '../setup';
+import { render } from 'react-dom';
+import { renderPass } from '../setup';
 
 import { faceGeometry } from '../faceMesh';
 import { camTextureFlipped } from '../webcam';
+
+import { TunnelEffect } from '../effects/TunnelEffect';
 
 import eyesDisplacementUrl from '../assets/eyes_displacement.png';
 
@@ -33,15 +42,23 @@ export class Tunnel {
     scene.add(mesh);
 
     // Setup all the passes used below
+    const saveFacePass = new SavePass();
+    const saveAllPass = new SavePass();
+    const finalSavePass = new SavePass();
 
-    const camPass = new EffectPass(null, webcamEffect);
+    const tunnelEffect = new TunnelEffect({
+      prevFrameTex: saveAllPass.renderTarget.texture,
+    });
 
-    camPass.renderToScreen = true;
-    renderPass.renderToScreen = true;
-    renderPass.clear = false;
+    const tunnelPass = new EffectPass(null, tunnelEffect);
 
-    // composer.addPass(camPass);
+    finalSavePass.renderToScreen = true;
+
     composer.addPass(renderPass);
+    composer.addPass(saveFacePass);
+    composer.addPass(tunnelPass);
+    composer.addPass(saveAllPass);
+    composer.addPass(finalSavePass);
   }
 
   update({ elapsedS }) {
