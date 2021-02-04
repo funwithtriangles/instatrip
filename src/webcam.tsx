@@ -6,10 +6,19 @@ export const video = document.createElement('video');
 export const camTexture = new THREE.VideoTexture(video);
 export const camTextureFlipped = new THREE.VideoTexture(video);
 
+export const camState = {
+  running: false,
+};
+
+// bunch of settings to make sure things work in iOS
+video.loop = true;
+video.muted = true;
+video.setAttribute('playsinline', 'true');
+video.setAttribute('preload', 'auto');
+video.autoplay = true;
+
 if (devMode.fakeCam) {
   video.src = devMode.fakeCam;
-  video.loop = true;
-  video.muted = true;
   video.play();
 } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   const constraints = {
@@ -21,6 +30,7 @@ if (devMode.fakeCam) {
     .then(stream => {
       video.srcObject = stream;
       video.play();
+      camState.running = true;
     })
     .catch(function(error) {
       alert(`Unable to access webcam: ${error.message}`);

@@ -1,6 +1,6 @@
 import * as facemesh from '@tensorflow-models/facemesh';
 import { Vector3, Object3D, Matrix4, VideoTexture } from 'three';
-import { video } from './webcam';
+import { video, camState } from './webcam';
 import { FaceMeshFaceGeometry } from './FaceMeshFaceGeometry/face';
 
 let faceMeshModel: facemesh.FaceMesh;
@@ -27,7 +27,7 @@ export const initFaceMesh = async () => {
 };
 
 export const updateFaceMesh = async () => {
-  if (faceMeshModel) {
+  if (faceMeshModel && camState.running) {
     const faces = await faceMeshModel.estimateFaces(video, false, true);
     if (faces.length) {
       const face = faces[0];

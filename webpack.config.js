@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -51,7 +52,11 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
     port: 8080,
-    https: true,
+    inline: false,
+    https: {
+      key: fs.readFileSync('./certs/key.pem'),
+      cert: fs.readFileSync('./certs/cert.pem'),
+    },
     host: '0.0.0.0',
   },
 };
