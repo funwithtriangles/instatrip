@@ -5,7 +5,7 @@ import { sketches } from '../sketches';
 
 const Nav = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: 0.5rem;
   width: 100%;
 `;
 
