@@ -5,40 +5,55 @@ import {
   SavePass,
   TextureEffect,
   BlendFunction,
+  RenderPass,
 } from 'postprocessing';
 
 import {
   Mesh,
   MeshBasicMaterial,
+  Scene,
   TextureLoader,
   Vector2,
   Vector3,
 } from 'three';
-import { renderPass, webcamEffect } from '../setup';
+import { orthCam, renderPass as eyesRenderPass, webcamEffect } from '../setup';
 
 import { faceGeometry } from '../faceMesh';
 import { SmokeEffect } from '../effects/SmokeEffect';
 
-import eyesMouthUrl from '../assets/eyes_inverted.png';
+import eyesUrl from '../assets/eyes_inverted.png';
+import mouthUrl from '../assets/mouth_bottom_inverted.png';
 
-const eyesMouthTex = new TextureLoader().load(eyesMouthUrl);
-const mat = new MeshBasicMaterial({
-  map: eyesMouthTex,
+const eyesTex = new TextureLoader().load(eyesUrl);
+const eyesMat = new MeshBasicMaterial({
+  map: eyesTex,
   transparent: true,
 });
+
+const mouthTex = new TextureLoader().load(mouthUrl);
+const mouthMat = new MeshBasicMaterial({
+  map: mouthTex,
+  transparent: true,
+});
+
+const mouthScene = new Scene();
+const mouthRenderPass = new RenderPass(mouthScene, orthCam);
 
 export class Devil {
   constructor({ composer, scene }) {
     // Add mesh with eyes/mouth/nostrils texture
-    const mesh = new Mesh(faceGeometry, mat);
-    scene.add(mesh);
+    const eyesMesh = new Mesh(faceGeometry, eyesMat);
+    scene.add(eyesMesh);
+
+    const mouthMesh = new Mesh(faceGeometry, mouthMat);
+    mouthScene.add(mouthMesh);
 
     // Setup all the passes used below
-    const saveSmokePass = new SavePass();
+    const saveEyesSmokePass = new SavePass();
+    const saveMouthSmokePass = new SavePass();
 
-    this.smokeEffect = new SmokeEffect({
-      prevFrameTex: saveSmokePass.renderTarget.texture,
-      frame: 0,
+    this.eyesSmokeEffect = new SmokeEffect({
+      prevFrameTex: saveEyesSmokePass.renderTarget.texture,
       smokeColorHSL: new Vector3(1, 1, 1),
       smokeTextureAmp: 0,
       smokeVelocity: new Vector2(0, 0.002),
@@ -46,28 +61,57 @@ export class Devil {
       smokeRot: 0,
     });
 
-    const smokeEffectPass = new EffectPass(null, this.smokeEffect);
+    this.mouthSmokeEffect = new SmokeEffect({
+      prevFrameTex: saveMouthSmokePass.renderTarget.texture,
+      smokeColorHSL: new Vector3(1, 0.8, 0.2),
+      smokeTextureAmp: 0.1,
+      smokeVelocity: new Vector2(0, -0.005),
+      noiseAmp: new Vector2(0.2, 0.5),
+      smokeDecay: 0,
+      smokeRot: 0,
+    });
 
-    const smokeTexEffect = new TextureEffect({
-      texture: saveSmokePass.renderTarget.texture,
+    const eyesSmokeEffectPass = new EffectPass(null, this.eyesSmokeEffect);
+    const mouthSmokeEffectPass = new EffectPass(null, this.mouthSmokeEffect);
+
+    const smokeEyesTexEffect = new TextureEffect({
+      texture: saveEyesSmokePass.renderTarget.texture,
       blendFunction: BlendFunction.ALPHA,
     });
 
-    const overlaySmokePass = new EffectPass(null, webcamEffect, smokeTexEffect);
+    const smokeMouthTexEffect = new TextureEffect({
+      texture: saveMouthSmokePass.renderTarget.texture,
+      blendFunction: BlendFunction.ALPHA,
+    });
+
+    const overlaySmokePass = new EffectPass(
+      null,
+      webcamEffect,
+      smokeEyesTexEffect,
+      smokeMouthTexEffect
+    );
 
     const blurPass = new BlurPass({
       KernelSize: KernelSize.SMALL,
     });
     blurPass.scale = 0.001;
 
-    // Render eyes, mouth, nostrils
-    composer.addPass(renderPass);
+    // Render eyes
+    composer.addPass(eyesRenderPass);
     // Add previous frame and manipulate for smoke effect
-    composer.addPass(smokeEffectPass);
+    composer.addPass(eyesSmokeEffectPass);
     // Blur each frame
     composer.addPass(blurPass);
     // Save frame to be fed into next frame
-    composer.addPass(saveSmokePass);
+    composer.addPass(saveEyesSmokePass);
+
+    // Render mouth
+    composer.addPass(mouthRenderPass);
+    // Add previous frame and manipulate for smoke effect
+    composer.addPass(mouthSmokeEffectPass);
+    // Save frame to be fed into next frame
+    composer.addPass(saveMouthSmokePass);
+
     // Render webcam image and overlay smoke
     composer.addPass(overlaySmokePass);
 
@@ -75,7 +119,8 @@ export class Devil {
   }
 
   update() {
-    this.smokeEffect.uniforms.get('frame').value = this.frame;
+    this.eyesSmokeEffect.uniforms.get('frame').value = this.frame;
+    this.mouthSmokeEffect.uniforms.get('frame').value = this.frame;
 
     this.frame++;
   }

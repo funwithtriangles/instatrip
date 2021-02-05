@@ -11,17 +11,19 @@ interface SmokeEffectProps {
   smokeVelocity: Vector2;
   smokeDecay: number;
   smokeRot: number;
+  noiseAmp: Vector2;
 }
 
 export class SmokeEffect extends Effect {
   constructor({
     prevFrameTex,
-    frame,
+    frame = 0,
     smokeColorHSL,
     smokeTextureAmp,
     smokeVelocity,
     smokeDecay,
     smokeRot,
+    noiseAmp = new Vector2(1, 1),
   }: SmokeEffectProps) {
     super('SmokeEffect', fragment, {
       blendFunction: BlendFunction.NORMAL,
@@ -33,6 +35,7 @@ export class SmokeEffect extends Effect {
         ['smokeVelocity', new Uniform(smokeVelocity)],
         ['smokeDecay', new Uniform(smokeDecay)],
         ['smokeRot', new Uniform(smokeRot)],
+        ['noiseAmp', new Uniform(noiseAmp)],
       ]),
     });
   }

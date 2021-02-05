@@ -5,6 +5,7 @@ uniform float smokeTextureAmp;
 uniform vec2 smokeVelocity;
 uniform float smokeDecay;
 uniform float smokeRot;
+uniform vec2 noiseAmp;
 
 #pragma glslify: import('../../glsl/common.glsl')
 
@@ -27,14 +28,14 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 	float angle2 = noise2base * PI * 2.;
 
 	// Use angle to send smoke in random directions
-	st.x += cos(angle0) * 0.003;
-	st.y += sin(angle0) * 0.002;
+	st.x += cos(angle0) * 0.003 * noiseAmp.x;
+	st.y += sin(angle0) * 0.002 * noiseAmp.y;
 
-	st.x += cos(angle1) * 0.003;
-	st.y += sin(angle1) * 0.001;
+	st.x += cos(angle1) * 0.003 * noiseAmp.x;
+	st.y += sin(angle1) * 0.001 * noiseAmp.y;
 
-	st.x += cos(angle2) * 0.005;
-	st.y += sin(angle2) * 0.002;
+	st.x += cos(angle2) * 0.005 * noiseAmp.x;
+	st.y += sin(angle2) * 0.002 * noiseAmp.y;
 
 	// rotate smoke a little
 	st *= rotate2d(smokeRot);
