@@ -6,6 +6,7 @@ import { Smoke } from './Smoke';
 import { Melt } from './Melt';
 import { Tunnel } from './Tunnel';
 import { Lumpy } from './Lumpy';
+import { Devil } from './Devil';
 
 interface SketchConstructorArgs {
   composer: EffectComposer;
@@ -41,5 +42,9 @@ export const sketches: SketchItem[] = [
   {
     Module: Lumpy,
     icon: '🥴',
+  },
+  {
+    Module: Devil,
+    icon: '👹',
   },
 ];

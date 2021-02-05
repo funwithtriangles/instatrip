@@ -34,7 +34,7 @@ export default function App() {
   const containerRef = useRef<HTMLDivElement>(div);
   const currentSketch = useRef<SketchInterface>();
 
-  const [sketchIndex, setSketchIndex] = useState(0);
+  const [sketchIndex, setSketchIndex] = useState(4);
 
   // Will only fire once
   useEffect(() => {

@@ -1,5 +1,10 @@
 uniform sampler2D prevFrameTex;
 uniform int frame;
+uniform vec3 smokeColorHSL;
+uniform float smokeTextureAmp;
+uniform vec2 smokeVelocity;
+uniform float smokeDecay;
+uniform float smokeRot;
 
 #pragma glslify: import('../../glsl/common.glsl')
 
@@ -8,8 +13,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   vec2 st = uv - vec2(0.5);
   st.x *= resolution.x/resolution.y;
 
-	// Send smoke upwards
-	st.y -= 0.004;
+	// Send smoke in direction
+	st -= smokeVelocity;
 
 	// Generate noise at various scales and speeds
 	float noise0base = snoise(vec3(st, time * 0.03) * 2.);
@@ -32,7 +37,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 	st.y += sin(angle2) * 0.002;
 
 	// rotate smoke a little
-	st *= rotate2d(0.01);
+	st *= rotate2d(smokeRot);
 
 	// Remap back to UV coords
 	st.x /= resolution.x/resolution.y;
@@ -43,10 +48,15 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 	outputColor = col + inputColor;
 
 	// Adjust colour
-	outputColor.rgb = hsl2rgb(vec3(0.95, 0.9, 0.6 + noise1base * 0.1));
+	outputColor.rgb = hsl2rgb(
+		smokeColorHSL +
+		vec3(0., 0., noise1base * smokeTextureAmp)
+	);
 	
 	// Only set alpha after some time has passed, because prevFrameTex initiates unpopulated
 	if (frame < 2) {
 		outputColor.a = inputColor.a;	
+	} else {
+		outputColor.a -= smokeDecay;
 	}
 }

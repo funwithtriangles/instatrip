@@ -11,15 +11,15 @@ import {
   Mesh,
   MeshBasicMaterial,
   TextureLoader,
-  Vector3,
   Vector2,
+  Vector3,
 } from 'three';
 import { renderPass, webcamEffect } from '../setup';
 
 import { faceGeometry } from '../faceMesh';
 import { SmokeEffect } from '../effects/SmokeEffect';
 
-import eyesMouthUrl from '../assets/eyes_mouth_inverted.png';
+import eyesMouthUrl from '../assets/eyes_inverted.png';
 
 const eyesMouthTex = new TextureLoader().load(eyesMouthUrl);
 const mat = new MeshBasicMaterial({
@@ -27,7 +27,7 @@ const mat = new MeshBasicMaterial({
   transparent: true,
 });
 
-export class Smoke {
+export class Devil {
   constructor({ composer, scene }) {
     // Add mesh with eyes/mouth/nostrils texture
     const mesh = new Mesh(faceGeometry, mat);
@@ -39,11 +39,11 @@ export class Smoke {
     this.smokeEffect = new SmokeEffect({
       prevFrameTex: saveSmokePass.renderTarget.texture,
       frame: 0,
-      smokeColorHSL: new Vector3(0.95, 0.9, 0.6),
-      smokeTextureAmp: 0.1,
-      smokeVelocity: new Vector2(0, 0.004),
-      smokeDecay: 0.001,
-      smokeRot: 0.01,
+      smokeColorHSL: new Vector3(1, 1, 1),
+      smokeTextureAmp: 0,
+      smokeVelocity: new Vector2(0, 0.002),
+      smokeDecay: 0.04,
+      smokeRot: 0,
     });
 
     const smokeEffectPass = new EffectPass(null, this.smokeEffect);
@@ -58,7 +58,7 @@ export class Smoke {
     const blurPass = new BlurPass({
       KernelSize: KernelSize.SMALL,
     });
-    blurPass.scale = 0.2;
+    blurPass.scale = 0.001;
 
     // Render eyes, mouth, nostrils
     composer.addPass(renderPass);
