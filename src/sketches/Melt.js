@@ -39,6 +39,7 @@ export class Melt {
     this.meltEffect = new MeltEffect({
       prevFrameTex: saveMeltPass.renderTarget.texture,
       featuresTex: saveFeaturesPass.renderTarget.texture,
+      frame: 0,
     });
 
     const meltEffectPass = new EffectPass(null, this.meltEffect);
@@ -64,13 +65,19 @@ export class Melt {
     composer.addPass(saveMeltPass);
     // Render webcam image and overlay melt
     composer.addPass(overlayMeltPass);
+
+    this.frame = 0;
   }
 
   update() {
+    this.meltEffect.uniforms.get('frame').value = this.frame;
+
     this.meltEffect.uniforms.get('noiseStrength').value =
       5 + metrics.mouthOpenness * 10;
 
     this.meltEffect.uniforms.get('featuresStrength').value =
       metrics.mouthOpenness * 2;
+
+    this.frame++;
   }
 }

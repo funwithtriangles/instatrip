@@ -30,11 +30,12 @@ export class Smoke {
     // Setup all the passes used below
     const saveSmokePass = new SavePass();
 
-    const smokeEffect = new SmokeEffect({
+    this.smokeEffect = new SmokeEffect({
       prevFrameTex: saveSmokePass.renderTarget.texture,
+      frame: 0,
     });
 
-    const smokeEffectPass = new EffectPass(null, smokeEffect);
+    const smokeEffectPass = new EffectPass(null, this.smokeEffect);
 
     const smokeTexEffect = new TextureEffect({
       texture: saveSmokePass.renderTarget.texture,
@@ -58,5 +59,13 @@ export class Smoke {
     composer.addPass(saveSmokePass);
     // Render webcam image and overlay smoke
     composer.addPass(overlaySmokePass);
+
+    this.frame = 0;
+  }
+
+  update() {
+    this.smokeEffect.uniforms.get('frame').value = this.frame;
+
+    this.frame++;
   }
 }

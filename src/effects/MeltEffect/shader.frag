@@ -2,6 +2,7 @@ uniform sampler2D prevFrameTex;
 uniform sampler2D featuresTex;
 uniform float noiseStrength;
 uniform float featuresStrength;
+uniform int frame;
 
 #pragma glslify: import('../../glsl/common.glsl')
 
@@ -54,8 +55,8 @@ void mainImage(const in vec4 headCol, const in vec2 uv, out vec4 outputColor) {
 
 	col = vec4(hsl2rgb(newCol.rgb), col.a);
 
-	// Do the feedback only after a few seconds
-	if (time < 5.) {
+	// Do the feedback only after 1st frame has passed
+	if (frame < 2) {
 		outputColor = headCol;
 	} else {
 		// Alpha blend prev frame with current

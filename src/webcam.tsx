@@ -1,14 +1,11 @@
 import * as THREE from 'three';
 import { resizeTexture } from './utils/resizeTexture';
 import { devMode } from '../settings';
+import { appState } from './appState';
 
 export const video = document.createElement('video');
 export const camTexture = new THREE.VideoTexture(video);
 export const camTextureFlipped = new THREE.VideoTexture(video);
-
-export const camState = {
-  running: false,
-};
 
 // bunch of settings to make sure things work in iOS
 video.loop = true;
@@ -20,7 +17,7 @@ video.autoplay = true;
 if (devMode.fakeCam) {
   video.src = devMode.fakeCam;
   video.play();
-  camState.running = true;
+  appState.camOn = true;
 } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   const constraints = {
     video: { facingMode: 'user' },
@@ -31,7 +28,7 @@ if (devMode.fakeCam) {
     .then(stream => {
       video.srcObject = stream;
       video.play();
-      camState.running = true;
+      appState.camOn = true;
     })
     .catch(function(error) {
       alert(`Unable to access webcam: ${error.message}`);

@@ -9,6 +9,7 @@ interface MeltEffectProps {
   headTex: Texture;
   noiseStength: number;
   featuresStrength: number;
+  frame: number;
 }
 
 export class MeltEffect extends Effect {
@@ -17,6 +18,7 @@ export class MeltEffect extends Effect {
     featuresTex,
     noiseStength,
     featuresStrength,
+    frame,
   }: MeltEffectProps) {
     super('MeltEffect', fragment, {
       blendFunction: BlendFunction.NORMAL,
@@ -25,6 +27,7 @@ export class MeltEffect extends Effect {
         ['featuresTex', new Uniform(featuresTex)],
         ['noiseStrength', new Uniform(noiseStength)],
         ['featuresStrength', new Uniform(featuresStrength)],
+        ['frame', new Uniform(frame)],
       ]),
     });
   }

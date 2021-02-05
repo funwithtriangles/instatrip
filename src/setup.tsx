@@ -12,6 +12,7 @@ import { devMode } from '../settings';
 import { camTextureFlipped, video } from './webcam';
 import { getResizeFactors } from './utils/getResizeFactors';
 import { faceGeometry, updateFaceMesh, initFaceMesh } from './faceMesh';
+import { appState } from './appState';
 
 export const renderer = new WebGLRenderer({
   antialias: true,
@@ -76,20 +77,22 @@ export interface AnimationInfo {
 export const startAnimation = (cb?: (info: AnimationInfo) => void) => {
   const animate = async () => {
     window.requestAnimationFrame(animate);
-    stats.begin();
-    const delta = clock.getDelta();
-    const elapsedS = clock.getElapsedTime();
-    const deltaFPS = delta * 60;
+    if (appState.camOn && appState.faceMeshModelLoaded) {
+      stats.begin();
+      const delta = clock.getDelta();
+      const elapsedS = clock.getElapsedTime();
+      const deltaFPS = delta * 60;
 
-    if (cb) {
-      cb({ deltaFPS, elapsedS });
+      if (cb) {
+        cb({ deltaFPS, elapsedS });
+      }
+
+      updateFaceMesh();
+
+      composer.render(delta);
+
+      stats.end();
     }
-
-    updateFaceMesh();
-
-    composer.render(delta);
-
-    stats.end();
   };
 
   animate();

@@ -1,4 +1,5 @@
 uniform sampler2D prevFrameTex;
+uniform int frame;
 
 #pragma glslify: import('../../glsl/common.glsl')
 
@@ -45,8 +46,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 	outputColor.rgb = hsl2rgb(vec3(0.95, 0.9, 0.6 + noise1base * 0.1));
 	
 	// Only set alpha after some time has passed, because prevFrameTex initiates unpopulated
-	if (time < 5.) {
+	if (frame < 2) {
 		outputColor.a = inputColor.a;	
 	}
-	
 }
