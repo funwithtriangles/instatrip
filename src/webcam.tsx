@@ -20,6 +20,7 @@ video.autoplay = true;
 if (devMode.fakeCam) {
   video.src = devMode.fakeCam;
   video.play();
+  camState.running = true;
 } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   const constraints = {
     video: { facingMode: 'user' },
