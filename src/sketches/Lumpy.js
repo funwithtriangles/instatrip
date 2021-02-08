@@ -22,6 +22,9 @@ export class Lumpy {
         camTex: { value: camTextureFlipped },
         faceHighlightsTex: { value: faceHighlightsTex },
         masterNormal: { value: new Vector3() },
+        baseDisplacement: { value: 0 },
+        animatedDisplacementAmp: { value: 70 },
+        animatedNormalAmp: { value: 1 },
       },
 
       vertexShader: vert,
