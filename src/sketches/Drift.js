@@ -3,18 +3,10 @@ import {
   SavePass,
   TextureEffect,
   BlendFunction,
-  MaskPass,
-  ClearMaskPass,
 } from 'postprocessing';
 
-import {
-  Mesh,
-  MeshBasicMaterial,
-  TextureLoader,
-  Vector2,
-  Vector3,
-} from 'three';
-import { orthCam, renderPass, webcamEffect } from '../setup';
+import { Mesh, MeshBasicMaterial, TextureLoader } from 'three';
+import { renderPass, webcamEffect } from '../setup';
 
 import { faceGeometry, metrics } from '../faceMesh';
 import { DriftEffect } from '../effects/DriftEffect';
@@ -30,7 +22,7 @@ const mat = new MeshBasicMaterial({
   transparent: true,
 });
 
-export class ThirdEye {
+export class Drift {
   constructor({ composer, scene }) {
     // Add mesh with head outline
     const mesh = new Mesh(faceGeometry, mat);

@@ -6,7 +6,7 @@ import { Smoke } from './Smoke';
 import { Melt } from './Melt';
 import { Tunnel } from './Tunnel';
 import { Lumpy } from './Lumpy';
-import { ThirdEye } from './ThirdEye';
+import { Drift } from './Drift';
 import { Devil } from './Devil';
 
 interface SketchConstructorArgs {
@@ -45,8 +45,8 @@ export const sketches: SketchItem[] = [
     icon: '🥴',
   },
   {
-    Module: ThirdEye,
-    icon: '👁',
+    Module: Drift,
+    icon: '🧘🏻',
   },
   {
     Module: Devil,
