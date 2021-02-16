@@ -2,6 +2,7 @@ uniform sampler2D prevFrameTex;
 uniform sampler2D featuresTex;
 uniform float driftAmp;
 uniform int frame;
+uniform float maskAmp;
 
 #pragma glslify: import('../../glsl/common.glsl')
 
@@ -32,8 +33,11 @@ void mainImage(const in vec4 headCol, const in vec2 uv, out vec4 outputColor) {
 	
 	vec4 col = texture2D(prevFrameTex, st);
 
-	// Mix prev frame and clean face based on various inputs and noise
-	col = mix(headCol, col, driftAmp);
+
+	// Mix prev frame and clean face based on inputs and noise
+	float maskNoise = clamp(headCol.r + maskAmp * 2., 0., 1.);
+	float driftVal = mix(0.9, 1., driftAmp); // The feedback biting range is narrow
+	col = mix(headCol, col, driftVal * maskNoise);
 
 	vec3 newCol = rgb2hsl(col.rgb);
 
@@ -48,5 +52,6 @@ void mainImage(const in vec4 headCol, const in vec2 uv, out vec4 outputColor) {
 	} else {
 		// Alpha blend prev frame with current
 		outputColor = vec4(1.0) * col + vec4(1.0 - col.a) * headCol;
+		// outputColor = headCol * vec4(vec3(maskNoise), 1.); // Debug: noise mask
 	}
 }

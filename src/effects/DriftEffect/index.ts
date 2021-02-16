@@ -8,6 +8,7 @@ interface DriftEffectProps {
   featuresTex: Texture;
   headTex: Texture;
   driftAmp: number;
+  maskAmp: number;
   frame: number;
 }
 
@@ -16,6 +17,7 @@ export class DriftEffect extends Effect {
     prevFrameTex,
     featuresTex,
     driftAmp,
+    maskAmp,
     frame,
   }: DriftEffectProps) {
     super('DriftEffect', fragment, {
@@ -24,6 +26,7 @@ export class DriftEffect extends Effect {
         ['prevFrameTex', new Uniform(prevFrameTex)],
         ['featuresTex', new Uniform(featuresTex)],
         ['driftAmp', new Uniform(driftAmp)],
+        ['maskAmp', new Uniform(maskAmp)],
         ['frame', new Uniform(frame)],
       ]),
     });

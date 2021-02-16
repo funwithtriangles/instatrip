@@ -20,6 +20,9 @@ import { faceGeometry, metrics } from '../faceMesh';
 import { DriftEffect } from '../effects/DriftEffect';
 
 import eyesMouthUrl from '../assets/eyes_mouth_inverted.png';
+import { clamp } from '../utils/clamp';
+
+export const easeFunc = t => t * t;
 
 const eyesMouthTex = new TextureLoader().load(eyesMouthUrl);
 const mat = new MeshBasicMaterial({
@@ -34,9 +37,6 @@ export class ThirdEye {
     scene.add(mesh);
 
     // Setup all the passes used below
-    const headMaskPass = new MaskPass(scene, orthCam);
-    const clearMaskPass = new ClearMaskPass();
-
     const camPass = new EffectPass(null, webcamEffect);
 
     const saveMeltPass = new SavePass();
@@ -69,50 +69,40 @@ export class ThirdEye {
     composer.addPass(overlayMeltPass);
 
     this.frame = 0;
-    this.checkFrame = 0;
+    this.checkTime = 0;
     this.prevLength = metrics.track.position.lengthSq();
     this.motion = 1;
+    this.drift = 0;
+    this.mask = 1;
   }
 
-  update({ elapsedS }) {
-    if (this.checkFrame > 10) {
+  update({ elapsedS, deltaFPS }) {
+    if (elapsedS - this.checkTime > 0.1) {
       const currLength = metrics.track.position.lengthSq();
       this.motion =
         Math.abs(currLength / this.prevLength - 1) + metrics.mouthOpenness;
       this.prevLength = currLength;
-      this.checkFrame = 0;
+      this.checkTime = elapsedS;
     }
 
-    if (this.motion > 0.2) {
-      if (this.moveStartTime === undefined) {
-        // If motion is above threshold, start timer
-        this.moveStartTime = elapsedS;
-      } else if (elapsedS - this.moveStartTime > 1) {
-        const m = (elapsedS - this.moveStartTime - 1) / 10;
-        // If movement is longer than a second, stop drift
-        this.meltEffect.uniforms.get('driftAmp').value = Math.max(1 - m, 0);
-        // also need to cancel freeze timer
-        this.freezeStartTime = undefined;
-      }
+    let easedDrift;
+
+    if (this.motion < 0.1) {
+      this.drift = clamp(this.drift + 0.004 * deltaFPS, 0, 1);
+      // Quickly hide the mask when we want to slowly melt
+      this.mask = clamp(this.mask + 0.04 * deltaFPS, -1, 1);
+      easedDrift = easeFunc(this.drift);
     } else {
-      // if motion is below threshold, cancel movement timer
-      this.moveStartTime = undefined;
-      if (this.freezeStartTime === undefined) {
-        // start freeze timer
-        this.freezeStartTime = elapsedS;
-      } else if (elapsedS - this.freezeStartTime > 2) {
-        const drift = (elapsedS - this.freezeStartTime - 2) / 10;
-        // If frozen for longer than X seconds, start drift
-        this.meltEffect.uniforms.get('driftAmp').value = Math.min(
-          0.6 + drift,
-          1
-        );
-      }
+      // Slowly bring in the mask when we want to fade in the cam
+      this.mask = clamp(this.mask - 0.02 * deltaFPS, -1, 1);
+      this.drift = clamp(this.drift - 0.01 * deltaFPS, 0, 1);
+      easedDrift = this.drift;
     }
 
+    this.meltEffect.uniforms.get('driftAmp').value = easedDrift;
+    this.meltEffect.uniforms.get('maskAmp').value = this.mask;
     this.meltEffect.uniforms.get('frame').value = this.frame;
 
-    this.checkFrame++;
     this.frame++;
   }
 }
