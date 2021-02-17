@@ -1,36 +1,16 @@
-const TerserPlugin = require('terser-webpack-plugin');
-const webpack = require('webpack');
+// const TerserPlugin = require('terser-webpack-plugin');
+const { merge } = require('webpack-merge');
+const commonConfig = require('./webpack.common');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-module.exports = {
-  entry: ['./src/index.tsx'],
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: ['babel-loader'],
-      },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-  },
+module.exports = merge(commonConfig, {
+  mode: 'production',
   output: {
     path: `${__dirname}/dist`,
     publicPath: '/',
     filename: 'app.min.js',
   },
-  optimization: {
-    minimizer: [new TerserPlugin()],
-  },
   plugins: [
-    new webpack.DefinePlugin({
-      __DEV__: true,
-    }),
-  ],
-};
+    new BundleAnalyzerPlugin()
+  ]
+});

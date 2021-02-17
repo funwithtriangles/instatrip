@@ -1,14 +1,8 @@
-const path = require('path');
-const fs = require('fs');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
-  watch: true,
   entry: ['./src/index.tsx'],
-  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -38,25 +32,20 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      __DEV__: true,
-    }),
+  plugins: [ 
     new HtmlWebpackPlugin({
       template: './src/index.html',
+      minify: {
+        minifyCSS: true,
+        collapseWhitespace: true,
+        keepClosingSlash: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true
+      }
     }),
-    new CopyWebpackPlugin({
-      patterns: [{ from: 'test-video' }],
-    }),
+    new CleanWebpackPlugin()
   ],
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    port: 8080,
-    // inline: false, // Uncomment when testing iOS
-    https: {
-      key: fs.readFileSync('./certs/key.pem'),
-      cert: fs.readFileSync('./certs/cert.pem'),
-    },
-    host: '0.0.0.0',
-  },
 };

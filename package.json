@@ -9,6 +9,7 @@
     "@babel/runtime": "7.5.0",
     "babel-eslint": "9.0.0",
     "babel-loader": "8.0.4",
+    "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.1",
     "css-loader": "^3.5.3",
     "eslint": "5.16.0",
@@ -33,8 +34,10 @@
     "ts-loader": "6.2.1",
     "typescript": "3.7.5",
     "webpack": "4.41.6",
+    "webpack-bundle-analyzer": "^4.4.0",
     "webpack-cli": "3.1.2",
-    "webpack-dev-server": "3.10.3"
+    "webpack-dev-server": "3.10.3",
+    "webpack-merge": "^5.7.3"
   },
   "dependencies": {
     "@srmagura/use-event-listener": "^0.2.1",
@@ -66,8 +69,7 @@
     ]
   },
   "scripts": {
-    "build": "webpack --config ./webpack.prod.js --mode production",
-    "dev": "webpack-dev-server",
-    "watch": "webpack --config ./webpack.config.js --mode development"
+    "build": "webpack --config ./webpack.prod.js",
+    "dev": "webpack-dev-server --config ./webpack.dev.js"
   }
 }
