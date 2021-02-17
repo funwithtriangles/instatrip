@@ -1,3 +1,4 @@
+import fscreen from 'fscreen';
 import { EffectComposer, TextureEffect, RenderPass } from 'postprocessing';
 import Stats from 'stats.js';
 import {
@@ -114,12 +115,12 @@ initFaceMesh(() => {
   startButtonEl.textContent = 'Start';
 
   startButtonEl.addEventListener('click', () => {
-    document.documentElement.requestFullscreen();
+    fscreen.requestFullscreen(document.body);
     introBlock.classList.add('fade');
   });
 });
 
 export const showIntroBlock = () => {
-  document.exitFullscreen();
+  fscreen.exitFullscreen();
   introBlock.classList.remove('fade');
 };
