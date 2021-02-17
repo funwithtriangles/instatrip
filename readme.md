@@ -1,5 +1,10 @@
 # Instatrip
+A demo showcasing what's possible with face filters on the web. Built completely with free and open-source libraries. These ones in particular:
 
+- [three.js](https://github.com/mrdoob/three.js/)
+- [postprocessing](https://github.com/vanruesc/postprocessing)
+- [FaceMeshFaceGeometry](https://github.com/spite/FaceMeshFaceGeometry)
+- [MediaPipe Facemesh](https://github.com/tensorflow/tfjs-models/tree/master/facemesh)
 
 ## Dev notes
 These are more for myself, but might be useful for anyone who wants to fork and have a play!
