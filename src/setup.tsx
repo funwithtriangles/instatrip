@@ -15,7 +15,10 @@ import { faceGeometry, updateFaceMesh, initFaceMesh } from './faceMesh';
 import { appState } from './appState';
 
 export const renderer = new WebGLRenderer({
-  antialias: true,
+  powerPreference: 'high-performance',
+  antialias: false,
+  stencil: true,
+  depth: false,
   alpha: true,
 });
 export const composer = new EffectComposer(renderer, {
