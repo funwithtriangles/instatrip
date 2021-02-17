@@ -55,7 +55,6 @@ const HelpIcon = styled.div`
   border-radius: 999px;
   width: 2rem;
   height: 2rem;
-  font-size: 2rem;
   display: flex;
   text-align: center;
   justify-content: center;
@@ -121,7 +120,7 @@ export default function App() {
 
   return (
     <Wrapper>
-      <HelpIcon onClick={showIntroBlock}>⇦</HelpIcon>
+      <HelpIcon onClick={showIntroBlock}>👽</HelpIcon>
       <CanvasContainer ref={containerRef} />
       {messageText && (
         <Message className={textVisible ? 'show' : 'hide'}>
