@@ -28,13 +28,33 @@ const CanvasContainer = styled.div`
   }
 `;
 
+const Message = styled.div`
+  position: fixed;
+  bottom: 10rem;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: 1s;
+
+  &.show {
+    opacity: 1;
+  }
+`;
+
 const div = document.createElement('div');
+
+let to: number;
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(div);
   const currentSketch = useRef<SketchInterface>();
 
-  const [sketchIndex, setSketchIndex] = useState(4);
+  const [sketchIndex, setSketchIndex] = useState(0);
+  const [messageText, setMessageText] = useState('');
+  const [textVisible, setTextVisible] = useState(false);
 
   // Will only fire once
   useEffect(() => {
@@ -63,11 +83,31 @@ export default function App() {
       composer,
       scene,
     });
+
+    // Set text if set in sketch
+    setMessageText(currentSketch.current.messageText || '');
+    setTextVisible(false);
+
+    // Make text appear after 1.5 seconds
+    clearTimeout(to);
+    to = setTimeout(() => {
+      setTextVisible(true);
+    }, 1500);
+
+    // Provide method to sketch to hide text when necessary
+    currentSketch.current.hideText = () => {
+      setTextVisible(false);
+    };
   }, [sketchIndex]);
 
   return (
     <Wrapper>
       <CanvasContainer ref={containerRef} />
+      {messageText && (
+        <Message className={textVisible ? 'show' : 'hide'}>
+          {messageText}
+        </Message>
+      )}
       <Thumbs setSketchIndex={setSketchIndex} sketchIndex={sketchIndex} />
     </Wrapper>
   );

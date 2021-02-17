@@ -24,6 +24,8 @@ const mat = new MeshBasicMaterial({
 
 export class Drift {
   constructor({ composer, scene }) {
+    this.messageText = 'Hold still, let your mind drift...';
+
     // Add mesh with head outline
     const mesh = new Mesh(faceGeometry, mat);
     scene.add(mesh);
@@ -86,6 +88,10 @@ export class Drift {
       // Quickly hide the mask when we want to slowly melt
       this.mask = clamp(this.mask + 0.04 * deltaFPS, -1, 1);
       easedDrift = easeFunc(this.drift);
+
+      if (this.drift > 0.8) {
+        this.hideText();
+      }
     } else {
       // Slowly bring in the mask when we want to fade in the cam
       this.mask = clamp(this.mask - 0.02 * deltaFPS, -1, 1);

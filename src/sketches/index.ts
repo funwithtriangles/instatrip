@@ -20,6 +20,8 @@ export interface SketchConstructor {
 
 export interface SketchInterface {
   update?(arg0: AnimationInfo): void;
+  messageText?: string;
+  hideText?: () => void;
 }
 
 export interface SketchItem {
