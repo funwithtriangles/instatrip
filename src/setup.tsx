@@ -98,5 +98,19 @@ export const startAnimation = (cb?: (info: AnimationInfo) => void) => {
   animate();
 };
 
+// for faster initial loads, the loading screen is not a React component
+// TODO: Maybe move over to React-Static
+const startButtonEl = document.querySelector('.start-button')!;
+const introBlock = document.querySelector('.intro-block')!;
+
+startButtonEl.textContent = 'Loading Model...';
+
 resize();
-initFaceMesh();
+initFaceMesh(() => {
+  startButtonEl.classList.remove('loading');
+  startButtonEl.textContent = 'Start';
+
+  startButtonEl.addEventListener('click', () => {
+    introBlock.classList.add('fade');
+  });
+});

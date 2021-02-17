@@ -22,11 +22,13 @@ export const metrics = {
 const lipTop = new Vector3();
 const lipBot = new Vector3();
 
-export const initFaceMesh = async () => {
+export const initFaceMesh = async (cb?: () => void) => {
   faceMeshModel = await facemesh.load({
     maxFaces: 1,
   });
   appState.faceMeshModelLoaded = true;
+
+  if (cb) cb();
 };
 
 export const updateFaceMesh = async () => {
