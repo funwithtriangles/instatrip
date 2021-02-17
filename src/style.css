@@ -1,9 +1,3 @@
-.intro-block.fade {
-  transition: 1s;
-  opacity: 0;
-  pointer-events: none;
-}
-
 /*! Flickity v2.1.2
 https://flickity.metafizzy.co
 ---------------------------------------------- */

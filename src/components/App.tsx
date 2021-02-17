@@ -6,6 +6,7 @@ import {
   scene,
   startAnimation,
   renderPass,
+  showIntroBlock,
 } from '../setup';
 import { Thumbs } from './Thumbs';
 import { sketches, SketchInterface } from '../sketches';
@@ -42,6 +43,24 @@ const Message = styled.div`
   &.show {
     opacity: 1;
   }
+`;
+
+const HelpIcon = styled.div`
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid white;
+  border-radius: 999px;
+  width: 2rem;
+  height: 2rem;
+  font-size: 2rem;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  color: #fa00ff;
 `;
 
 const div = document.createElement('div');
@@ -102,6 +121,7 @@ export default function App() {
 
   return (
     <Wrapper>
+      <HelpIcon onClick={showIntroBlock}>⇦</HelpIcon>
       <CanvasContainer ref={containerRef} />
       {messageText && (
         <Message className={textVisible ? 'show' : 'hide'}>

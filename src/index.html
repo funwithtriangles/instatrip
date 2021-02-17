@@ -58,6 +58,12 @@
       flex-direction: column;
       font-size: 20px;
       padding: 3rem;
+      transition: 1s;
+    }
+
+    .intro-block.fade {
+      opacity: 0;
+      pointer-events: none;
     }
 
     h1 {
@@ -89,9 +95,8 @@
   <div class="intro-block">
     <h1>👽 InstaTrip 👽</h1>
     <p>A demo showcasing what's possible with face filters on the web. Built completely with free and open-source libraries.</p>
-    <p>Find out more on <a href="https://github.com/funwithtriangles/face-filter-gallery">Github</a>. Created by <a href="http://funwithtriangles.net/">Alex Kempton.</a></p>
+    <p>Find out more on <a href="https://github.com/funwithtriangles/instatrip">Github</a>. Created by <a href="http://funwithtriangles.net/">Alex Kempton.</a></p>
     <a class="start-button loading">Loading Assets...</a>
-  
   </div>
   <div id="root"></div>
 </body>

@@ -114,3 +114,7 @@ initFaceMesh(() => {
     introBlock.classList.add('fade');
   });
 });
+
+export const showIntroBlock = () => {
+  introBlock.classList.remove('fade');
+};
