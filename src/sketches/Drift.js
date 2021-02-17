@@ -31,34 +31,34 @@ export class Drift {
     // Setup all the passes used below
     const camPass = new EffectPass(null, webcamEffect);
 
-    const saveMeltPass = new SavePass();
+    const saveDriftPass = new SavePass();
     const saveFeaturesPass = new SavePass();
 
-    this.meltEffect = new DriftEffect({
-      prevFrameTex: saveMeltPass.renderTarget.texture,
+    this.driftEffect = new DriftEffect({
+      prevFrameTex: saveDriftPass.renderTarget.texture,
       featuresTex: saveFeaturesPass.renderTarget.texture,
       frame: 0,
     });
 
-    const meltEffectPass = new EffectPass(null, this.meltEffect);
+    const driftEffectPass = new EffectPass(null, this.driftEffect);
 
-    const meltTexEffect = new TextureEffect({
-      texture: saveMeltPass.renderTarget.texture,
+    const driftTexEffect = new TextureEffect({
+      texture: saveDriftPass.renderTarget.texture,
       blendFunction: BlendFunction.ALPHA,
     });
 
-    const overlayMeltPass = new EffectPass(null, webcamEffect, meltTexEffect);
+    const overlayDriftPass = new EffectPass(null, webcamEffect, driftTexEffect);
 
     composer.addPass(renderPass);
     composer.addPass(saveFeaturesPass);
     // Render camera
     composer.addPass(camPass);
     // Do melt effect
-    composer.addPass(meltEffectPass);
+    composer.addPass(driftEffectPass);
     // Save frame to be fed into next frame
-    composer.addPass(saveMeltPass);
+    composer.addPass(saveDriftPass);
     // Render webcam image and overlay melt
-    composer.addPass(overlayMeltPass);
+    composer.addPass(overlayDriftPass);
 
     this.frame = 0;
     this.checkTime = 0;
@@ -70,6 +70,8 @@ export class Drift {
 
   update({ elapsedS, deltaFPS }) {
     if (elapsedS - this.checkTime > 0.1) {
+      // Roughly calculate motion every 0.1s
+      // TODO: Distance will be greater if face is nearer to camera
       const currLength = metrics.track.position.lengthSq();
       this.motion =
         Math.abs(currLength / this.prevLength - 1) + metrics.mouthOpenness;
@@ -91,9 +93,9 @@ export class Drift {
       easedDrift = this.drift;
     }
 
-    this.meltEffect.uniforms.get('driftAmp').value = easedDrift;
-    this.meltEffect.uniforms.get('maskAmp').value = this.mask;
-    this.meltEffect.uniforms.get('frame').value = this.frame;
+    this.driftEffect.uniforms.get('driftAmp').value = easedDrift;
+    this.driftEffect.uniforms.get('maskAmp').value = this.mask;
+    this.driftEffect.uniforms.get('frame').value = this.frame;
 
     this.frame++;
   }
