@@ -115,12 +115,16 @@ initFaceMesh(() => {
   startButtonEl.textContent = 'Start';
 
   startButtonEl.addEventListener('click', () => {
-    fscreen.requestFullscreen(document.body);
+    if (fscreen.fullscreenEnabled) {
+      fscreen.requestFullscreen(document.body);
+    }
     introBlock.classList.add('fade');
   });
 });
 
 export const showIntroBlock = () => {
-  fscreen.exitFullscreen();
+  if (fscreen.fullscreenEnabled) {
+    fscreen.exitFullscreen();
+  }
   introBlock.classList.remove('fade');
 };
