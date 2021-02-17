@@ -10,7 +10,8 @@ module.exports = merge(commonConfig, {
     publicPath: '/',
     filename: 'app.min.js',
   },
-  plugins: [
-    new BundleAnalyzerPlugin()
-  ]
+  // Useful for analysing bundle, keep commented out otherwise (breaks netlify build)
+  // plugins: [
+  //   new BundleAnalyzerPlugin()
+  // ]
 });
