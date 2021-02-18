@@ -4,7 +4,7 @@ import { Mesh, TextureLoader, ShaderMaterial, Vector3 } from 'three';
 
 import { renderPass, webcamEffect } from '../setup';
 
-import { faceGeometry, metrics } from '../faceMesh';
+import { faceGeometry, metrics, trackFace } from '../faceMesh';
 import { camTextureFlipped } from '../webcam';
 
 import faceHighlightsUrl from '../assets/face_highlights.jpg';
@@ -23,7 +23,7 @@ export class Lumpy {
         faceHighlightsTex: { value: faceHighlightsTex },
         masterNormal: { value: new Vector3() },
         baseDisplacement: { value: 0 },
-        animatedDisplacementAmp: { value: 70 },
+        animatedDisplacementAmp: { value: 50 },
         animatedNormalAmp: { value: 1 },
       },
       vertexShader: vert,
@@ -47,6 +47,7 @@ export class Lumpy {
 
   update({ elapsedS }) {
     this.mat.uniforms.time.value = elapsedS;
+    this.mat.uniforms.animatedDisplacementAmp.value = 50 * metrics.zed;
     this.mat.uniforms.masterNormal.value.copy(metrics.track.normal);
   }
 }

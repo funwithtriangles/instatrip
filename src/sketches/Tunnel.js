@@ -11,7 +11,7 @@ import { Mesh, TextureLoader, ShaderMaterial } from 'three';
 import { render } from 'react-dom';
 import { renderPass } from '../setup';
 
-import { faceGeometry } from '../faceMesh';
+import { faceGeometry, metrics } from '../faceMesh';
 import { camTextureFlipped } from '../webcam';
 
 import { TunnelEffect } from '../effects/TunnelEffect';
@@ -30,6 +30,7 @@ export class Tunnel {
         time: { value: 1.0 },
         camTex: { value: camTextureFlipped },
         dispTex: { value: dispTex },
+        masterDisp: { value: 1 },
       },
 
       vertexShader: vert,
@@ -63,5 +64,6 @@ export class Tunnel {
 
   update({ elapsedS }) {
     this.mat.uniforms.time.value = elapsedS;
+    this.mat.uniforms.masterDisp.value = metrics.zed / metrics.zed / 2.5;
   }
 }

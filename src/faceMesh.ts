@@ -1,5 +1,5 @@
 import * as facemesh from '@tensorflow-models/facemesh';
-import { Vector3, Object3D, Matrix4, VideoTexture } from 'three';
+import { Vector3, Object3D, Matrix4 } from 'three';
 import { appState } from './appState';
 import { video } from './webcam';
 
@@ -12,6 +12,7 @@ export const faceGeometry = new FaceMeshFaceGeometry({
 
 export const metrics = {
   mouthOpenness: 0,
+  zed: 1,
   track: {
     position: new Vector3(),
     normal: new Vector3(),
@@ -37,19 +38,19 @@ export const updateFaceMesh = async () => {
     const face = faces[0];
     faceGeometry.update(face, true);
 
-    // eslint-disable-next-line
-      // @ts-ignore
+    /* eslint-disable */ 
+    // @ts-ignore
     const top = face.mesh[13];
-    // eslint-disable-next-line
-      // @ts-ignore
+    // @ts-ignore
     const bot = face.mesh[14];
+    /* eslint-enable */
 
     lipTop.set(top[0], top[1], top[2]);
     lipBot.set(top[0], bot[1], bot[2]);
 
-    metrics.mouthOpenness = lipBot.distanceTo(lipTop) / 25;
-
     metrics.track = faceGeometry.track(5, 45, 275);
+    metrics.mouthOpenness = lipBot.distanceTo(lipTop) / 25;
+    metrics.zed = 2 + lipTop.z / 10;
   }
 };
 

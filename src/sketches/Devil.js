@@ -169,7 +169,7 @@ export class Devil {
     this.hornsMat.uniforms.time.value = elapsedS;
 
     this.hornsMat.uniforms.baseDisplacement.value =
-      100 + metrics.mouthOpenness * 300;
+      100 * metrics.zed + metrics.mouthOpenness * 200;
 
     this.eyesSmokeEffect.uniforms.get('frame').value = this.frame;
     this.mouthSmokeEffect.uniforms.get('frame').value = this.frame;

@@ -6,6 +6,7 @@ uniform float time;
 uniform sampler2D dispTex;
 uniform vec2 resolution;
 uniform vec3 masterNormal;
+uniform float masterDisp;
 
 attribute vec2 videoUv;
 varying vec2 vVideoUv;
@@ -29,7 +30,7 @@ void main()
   float noise = (sin(uv.x * 4. + time * 2.) + 1.) * .5;
 
   // Displace
-  float displacement = (30. + 20. * noise) * dispCol.a ;
+  float displacement = (30. + 20. * noise) * dispCol.a * masterDisp;
 
   vec3 newPosition = position + dispDir * displacement;
 
