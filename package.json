@@ -23,6 +23,7 @@
     "eslint-plugin-react": "7.18.0",
     "eslint-plugin-react-hooks": "1.7.0",
     "file-loader": "^6.0.0",
+    "gh-pages": "^3.1.0",
     "glslify-import": "^3.1.0",
     "glslify-loader": "^2.0.0",
     "html-webpack-plugin": "^4.3.0",
@@ -70,6 +71,7 @@
   },
   "scripts": {
     "build": "webpack --config ./webpack.prod.js",
-    "dev": "webpack-dev-server --config ./webpack.dev.js"
+    "dev": "webpack-dev-server --config ./webpack.dev.js",
+    "deploy": "gh-pages -d dist"
   }
 }
