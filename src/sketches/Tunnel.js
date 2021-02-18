@@ -1,14 +1,7 @@
-import {
-  BlendFunction,
-  ClearPass,
-  EffectPass,
-  SavePass,
-  TextureEffect,
-} from 'postprocessing';
+import { EffectPass, SavePass } from 'postprocessing';
 
 import { Mesh, TextureLoader, ShaderMaterial } from 'three';
 
-import { render } from 'react-dom';
 import { renderPass } from '../setup';
 
 import { faceGeometry, metrics } from '../faceMesh';

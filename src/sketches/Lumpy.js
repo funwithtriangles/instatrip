@@ -4,7 +4,7 @@ import { Mesh, TextureLoader, ShaderMaterial, Vector3 } from 'three';
 
 import { renderPass, webcamEffect } from '../setup';
 
-import { faceGeometry, metrics, trackFace } from '../faceMesh';
+import { faceGeometry, metrics } from '../faceMesh';
 import { camTextureFlipped } from '../webcam';
 
 import faceHighlightsUrl from '../assets/face_highlights.jpg';
