@@ -7,7 +7,7 @@ module.exports = merge(commonConfig, {
   mode: 'production',
   output: {
     path: `${__dirname}/dist`,
-    publicPath: '/instatrip',
+    publicPath: '/instatrip/',
     filename: 'app.min.js',
   },
   // Useful for analysing bundle, keep commented out otherwise (breaks netlify build)
