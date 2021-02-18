@@ -19,7 +19,7 @@ export const renderer = new WebGLRenderer({
   powerPreference: 'high-performance',
   antialias: false,
   stencil: true,
-  depth: false,
+  depth: true,
   alpha: true,
 });
 export const composer = new EffectComposer(renderer, {

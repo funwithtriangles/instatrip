@@ -26,7 +26,6 @@ export class Lumpy {
         animatedDisplacementAmp: { value: 70 },
         animatedNormalAmp: { value: 1 },
       },
-
       vertexShader: vert,
       fragmentShader: frag,
     });
@@ -36,7 +35,6 @@ export class Lumpy {
     scene.add(mesh);
 
     // Setup all the passes used below
-
     const camPass = new EffectPass(null, webcamEffect);
 
     camPass.renderToScreen = true;
