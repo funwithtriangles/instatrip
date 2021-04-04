@@ -8,6 +8,7 @@ import { Tunnel } from './Tunnel';
 import { Lumpy } from './Lumpy';
 import { Drift } from './Drift';
 import { Devil } from './Devil';
+import { Noise } from './Noise';
 
 interface SketchConstructorArgs {
   composer: EffectComposer;
@@ -53,5 +54,9 @@ export const sketches: SketchItem[] = [
   {
     Module: Devil,
     icon: '👹',
+  },
+  {
+    Module: Noise,
+    icon: '✨',
   },
 ];
