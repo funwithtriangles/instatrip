@@ -62,7 +62,7 @@
     "react-flickity-component": "^3.5.0",
     "stats.js": "^0.17.0",
     "styled-components": "5.0.0",
-    "three": "^0.116.1"
+    "three": "^0.137.0"
   },
   "glslify": {
     "transform": [
